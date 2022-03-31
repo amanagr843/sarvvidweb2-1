@@ -29,7 +29,7 @@ import GridContainer from "./components/Grid/GridContainer.js";
 // import './assets/styles/App.scss';
 import styles from "./assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import reducers from "./reducers";
-import { ViewFiles, Shared } from "./pages";
+import { ViewFiles,RecycleBinViewFiles, SharedViewFiles, SettingsViewFiles, RequestViewFiles,  Shared } from "./pages";
 
 import RightPane from "./components/RightPane/RightPane";
 import generatedummyFileSystem from "./utils/dummyFileSystem";
@@ -64,7 +64,13 @@ function App() {
   const [a, seta] = useState(0);
   const [b, setb] = useState(0);
   const [online, setOnline] = useState(true);
+  const [currentView, setCurrentView] = useState("home");
   const darkTheme = useTheme()
+
+  function handleViewChange(viewName) {
+    setCurrentView(viewName);
+  }
+
   
   // const [chosenFile, setChosenFile] = useState(false);
   // const [chosenFolder, setChosenFolder] = useState(false);
@@ -188,27 +194,26 @@ function App() {
                     setB={(val) => setb(val)}
                   />
                 </Route>
-                <PrivateRoute path="/shared" exact = {true} >
-                  
-                    {/* {online ? "" : <CheckOnline click={handleOnlineClick} />}
-                    <Route path="*" component={Sidebar} /> */}
-                    
-
-                    <Shared/>
-                    {/* <RightPane
-                      a={a}
-                      b={b}
-                      title={title}
-                      setA={(val) => seta(val)}
-                      setB={(val) => setb(val)}
-                    /> */}
-                  
-                </PrivateRoute>                
-                <PrivateRoute path="/" exact = {true}>
+               
+                <PrivateRoute path="/">
                   <div className={`Dashboard ${darkTheme ? "dark" : ""}`}>
                     {online ? "" : <CheckOnline click={handleOnlineClick} />}
-                    <Route path="*" component={Sidebar} />
-                    <Route path="*" component={ViewFiles} /> 
+                    <Route
+                        path="*"
+                        render={(props) => (
+                          <Sidebar
+                            handleViewChange={handleViewChange}
+                            {...props}
+                          />
+                        )}
+                      />
+                    {currentView === "home" && <Route path="*" component={ViewFiles} />}
+                    {currentView === "recycleBin" && <RecycleBinViewFiles />}
+                    {currentView === "sharedFiles" && <SharedViewFiles />}
+                    {currentView === "fileRequest" && <RequestViewFiles />}
+                    {currentView === "settings" && <SettingsViewFiles />}
+                    
+                    
 
                     
                     <RightPane
