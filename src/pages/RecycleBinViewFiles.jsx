@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./MiddlePaneShared.css";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "./Card/Card";
+import RecycleCard from "./Card/RecycleCard";
 import { Route } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import SearchBar from "../components/SearchBar";
@@ -57,13 +57,13 @@ const RecycleBinViewFiles = () => {
         className="middlePane_cards_recycle"
         style={{ background: `${darkTheme ? "#121212" : "#fff"}` }}
       >
-        {emptyFiles ? (
+        {false ? (
           <div className={`empty_files_recycle ${darkTheme ? "dark" : ""}`}>
             <img src={emptyIllustration} alt="empty" />
             <p>Whohoo! Empty recycle bin. All cleared up</p>
           </div>
         ) : (
-          <div className="shared_files">
+          <div className="recycle_files">
             <div className="midPane-header">
               <div className="navigation-container">
                 <div className="navigation-subcontainer">
@@ -89,7 +89,7 @@ const RecycleBinViewFiles = () => {
               <p>Size</p>
               <p>Type</p>
             </div>
-            <Route path="*" component={Card} />
+            <Route path="*" component={RecycleCard} />
           </div>
         )}
 

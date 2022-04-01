@@ -22,6 +22,7 @@ import Box from "@material-ui/core/Box";
 import md5 from "md5";
 import {useTheme} from "../../contexts/themeContext"
 import "./styles.css"
+import { deleteEntry } from "../../actions/fileSystem";
 
 // class Icon extends Component {
 //   nodeRef = createRef();
@@ -343,7 +344,7 @@ import "./styles.css"
 //   }
 // }
 
-const Icon = (props) => {
+const RecycleIcon = (props) => {
   
   const nodeRef = useRef()
   const darkTheme = useTheme()
@@ -427,64 +428,57 @@ const Icon = (props) => {
   };
 
 
+  const deleteEntry = (data, entryID) => {
+    const entry = data[entryID];
+    if (entry.type === FOLDER) {
+      entry.children.forEach((id) => {
+        deleteEntry(data, id);
+      });
+    }
+    let parentID = data[entryID].parentID;
+    let index = data[parentID].children.indexOf(entryID);
+    if (index !== -1) data[parentID].children.splice(index, 1);
+    delete data[entryID];
+    localStorage.setItem("recycleBin", JSON.stringify(data));
+    
+    return {...data}
+  };
+
   const handleDelete = async () => {
     console.log("fileEntry...", props.entry)
 
     try {
       console.log("hi.....", props.entry)
-      props.deleteFn();
+    //   props.deleteFn();
 
-      
+      // await axios({
+      //   method: "post",
+      //   url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${this.props.entry.name}&filesize=${this.props.entry.size}`,
+      //   headers: {
+      //     "Content-type": "application/json",
+      //     authtoken: localStorage.getItem("authtoken"),
+      //   },
+      //   data: {
+      //     IMEI: localStorage.getItem("IMEI"),
+      //     filename:this.props.entry.name,
+          
+      //   },
+      // }).then((response) => {
+      //   console.log("deletefile response....", response)
 
-      const data = JSON.parse(localStorage.getItem("recycleBin"));
+      //   localStorage.setItem("filled_per", response.data.storageFilled)
+      //   localStorage.setItem("remaining_per", response.data.storageRemain)
 
-      console.log("recycleData before...", data)
+      //   if (response.success) {
+      //     console.log("Deleted ", response.success);
 
-      const pid = "1382b6993e9f270cb1c29833be3f5750"
+      //   }
+      // });
+
+      const entryID = md5(entry.path + entry.type)
+      const newData = deleteEntry(JSON.parse(localStorage.getItem("recycleBin")), entryID)
 
 
-
-      var newEntry = {};
-          newEntry.parentPath = "/";
-          newEntry.name = props.entry.name;
-
-          newEntry.type = FILE;
-          newEntry.path =
-            newEntry.parentPath === "/"
-              ? `${newEntry.parentPath}${newEntry.name}`
-              : `${newEntry.parentPath}/${newEntry.name}`;
-          let id = md5(newEntry.path + newEntry.type);
-
-          if (id in data) {
-            let arr = props.entry.name.split(".");
-            if (arr.length > 1)
-              newEntry.name =
-                arr.slice(0, arr.length - 1).join(".") +
-                "_" +
-                Date.now() +
-                "." +
-                arr[arr.length - 1];
-            else newEntry.name = arr[0] + "_" + Date.now();
-            console.log("Changing Name==========>>>", newEntry.name);
-            newEntry.path =
-              newEntry.parentPath === "/"
-                ? `${newEntry.parentPath}${newEntry.name}`
-                : `${newEntry.parentPath}/${newEntry.name}`;
-            id = md5(newEntry.path + newEntry.type);
-          }
-
-          if (newEntry.type === FOLDER) {
-            newEntry.children = [];
-          }
-          newEntry.creatorName = "User";
-          newEntry.size = props.entry.size;
-          newEntry.parentID = pid;
-          data[id] = newEntry;
-          data["1382b6993e9f270cb1c29833be3f5750"].children.push(id);
-
-          console.log("recycle data after...", data)
-
-          localStorage.setItem("recycleBin", JSON.stringify(data));
 
 
       const obj = {
@@ -498,7 +492,7 @@ const Icon = (props) => {
 
       const deleteResp = await axios({
         method: 'post',
-        url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${props.entry.name}&filesize=${props.entry.size}`,
+        url: `https://api.sarvvid-ai.com/deletepermanently`,
         headers: {
                   authtoken: localStorage.getItem("authtoken")}, 
         data: {
@@ -518,6 +512,7 @@ const Icon = (props) => {
 
       props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
 
+      window.location.reload()
 
       
 
@@ -582,7 +577,7 @@ const Icon = (props) => {
         style={style}
         content={[
           {
-            info: "Download",
+            info: "Restore",
             onClick: () => {
               setLoading(true);
               axios
@@ -608,10 +603,7 @@ const Icon = (props) => {
                 });
             },
           },
-          {
-            info: "Share",
-            onClick: () => setShowInfo(true)              
-          },
+          
           {
             info: "Delete",
             style: { color: "red" },
@@ -647,4 +639,4 @@ const Icon = (props) => {
   )
 }
 
-export default withRouter(Icon);
+export default withRouter(RecycleIcon);
