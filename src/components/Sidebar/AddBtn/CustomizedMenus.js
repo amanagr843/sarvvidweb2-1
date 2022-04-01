@@ -184,6 +184,9 @@ export default function CustomizedMenus(props) {
         if (response.data.newtoken) {
           console.log("New auth token...",response.data.newtoken);
           localStorage.setItem("authtoken", response.data.newtoken);
+          console.log("upload resp...", response)
+          localStorage.setItem("filled_per", response.data.storageFilled)
+          localStorage.setItem("remaining_per", response.data.storageRemain)
           setDisableUploadButton(false);
           const values = {
             type: FILE,
@@ -265,33 +268,33 @@ export default function CustomizedMenus(props) {
               Number(localStorage.getItem("total"))) *
             100;
           console.log("updated used value=======>>", val);
-          axios({
-            method: "post",
-            url: `https://api.sarvvid-ai.com/updatedata?ping=${localStorage.getItem(
-              "ping"
-            )}`,
-            headers: {
-              "Content-type": "application/json",
-              authtoken: localStorage.getItem("authtoken"),
-            },
-            data: JSON.stringify({
-              IMEI: localStorage.getItem("IMEI"),
-              filled_per: val,
-              remaining_per: 100 - val,
-              images_count: 0,
-              documents_count: file.length,
-              videos_count: 0,
-            }),
-          }).then((response) => {
-            if ("code" in response.data && response.data.code === 200) {
-              console.log("Success======>>", response.data.success);
-              console.log("upload response...", response.data)
-              localStorage.setItem("filled_per", response.data.storageFilled)
-              localStorage.setItem("remaining_per", response.data.storageRemain)
-            } else {
-              console.log(response.data.notsecure);
-            }
-          });
+          // axios({
+          //   method: "post",
+          //   url: `https://api.sarvvid-ai.com/updatedata?ping=${localStorage.getItem(
+          //     "ping"
+          //   )}`,
+          //   headers: {
+          //     "Content-type": "application/json",
+          //     authtoken: localStorage.getItem("authtoken"),
+          //   },
+          //   data: JSON.stringify({
+          //     IMEI: localStorage.getItem("IMEI"),
+          //     filled_per: val,
+          //     remaining_per: 100 - val,
+          //     images_count: 0,
+          //     documents_count: file.length,
+          //     videos_count: 0,
+          //   }),
+          // }).then((response) => {
+          //   if ("code" in response.data && response.data.code === 200) {
+          //     console.log("Success======>>", response.data.success);
+          //     console.log("upload response...", response.data)
+          //     localStorage.setItem("filled_per", response.data.storageFilled)
+          //     localStorage.setItem("remaining_per", response.data.storageRemain)
+          //   } else {
+          //     console.log(response.data.notsecure);
+          //   }
+          // });
           selectedDocument([]);
         } else {
           console.log(response.data.notsecure);

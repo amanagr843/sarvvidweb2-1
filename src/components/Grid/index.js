@@ -77,7 +77,7 @@ class Grid extends Component {
 const mapStateToProps = (state, ownProps) => {
   console.log(ownProps.match.url);
   const path = ownProps.match.url;
-  console.log(
+  console.log("mapstatetoprops...",
     state.fileSystem[md5(path + FOLDER)].children.map(
       (childrenID) => state.fileSystem[childrenID]
     )

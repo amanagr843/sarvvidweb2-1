@@ -289,6 +289,7 @@ function LoginForm(props) {
 
         let new_fileSystem = resp.data.filesys;
         localStorage.setItem("fileSystem", JSON.stringify(new_fileSystem));
+        localStorage.setItem("recycleBin", JSON.stringify(resp.data.recycleBin))
         var new_data = JSON.parse(localStorage.getItem("fileSystem"));
         var newEntry = {};
         newEntry.name = "SarvvidBox";
@@ -440,6 +441,7 @@ function LoginForm(props) {
         console.log("Logged in successfully");
         console.log("file sytem...", resp.data.filesys);
 
+
         localStorage.setItem("IMEI", resp.data.IMEI);
         localStorage.setItem("authtoken", resp.data.authtoken);
         localStorage.setItem("ping", 130);
@@ -447,11 +449,13 @@ function LoginForm(props) {
         localStorage.setItem("user_number", resp.data.phone);
         localStorage.setItem("filled_per", resp.data.storageFilled);
         localStorage.setItem("remaining_per", resp.data.storageRemain);
+        
 
         const temp = resp.data.data;
 
         let new_fileSystem = resp.data.filesys;
         localStorage.setItem("fileSystem", JSON.stringify(new_fileSystem));
+        localStorage.setItem("recycleBin", JSON.stringify(resp.data.recycleBin))
         var new_data = JSON.parse(localStorage.getItem("fileSystem"));
         var newEntry = {};
         newEntry.name = "SarvvidBox";

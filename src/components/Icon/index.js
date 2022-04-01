@@ -19,6 +19,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
 // New
+import md5 from "md5";
 import {useTheme} from "../../contexts/themeContext"
 import "./styles.css"
 
@@ -353,6 +354,7 @@ const Icon = (props) => {
   const [loading, setLoading] = useState(false)
   const [prevStyle, setPrevStyle] = useState({})
   
+  console.log("Entry in Icon...", props.entry)
 
   const _handleContextMenu = (e) => {
     e.preventDefault()
@@ -456,49 +458,90 @@ const Icon = (props) => {
       //   }
       // });
 
+      const data = JSON.parse(localStorage.getItem("recycleBin"));
+
+      console.log("recycleData before...", data)
+
+      const pid = "1382b6993e9f270cb1c29833be3f5750"
+
+
+
+      var newEntry = {};
+          newEntry.parentPath = "/";
+          newEntry.name = props.entry.name;
+
+          newEntry.type = FILE;
+          newEntry.path =
+            newEntry.parentPath === "/"
+              ? `${newEntry.parentPath}${newEntry.name}`
+              : `${newEntry.parentPath}/${newEntry.name}`;
+          let id = md5(newEntry.path + newEntry.type);
+
+          if (id in data) {
+            let arr = props.entry.name.split(".");
+            if (arr.length > 1)
+              newEntry.name =
+                arr.slice(0, arr.length - 1).join(".") +
+                "_" +
+                Date.now() +
+                "." +
+                arr[arr.length - 1];
+            else newEntry.name = arr[0] + "_" + Date.now();
+            console.log("Changing Name==========>>>", newEntry.name);
+            newEntry.path =
+              newEntry.parentPath === "/"
+                ? `${newEntry.parentPath}${newEntry.name}`
+                : `${newEntry.parentPath}/${newEntry.name}`;
+            id = md5(newEntry.path + newEntry.type);
+          }
+
+          if (newEntry.type === FOLDER) {
+            newEntry.children = [];
+          }
+          newEntry.creatorName = "User";
+          newEntry.size = props.entry.size;
+          newEntry.parentID = pid;
+          data[id] = newEntry;
+          data["1382b6993e9f270cb1c29833be3f5750"].children.push(id);
+
+          console.log("recycle data after...", data)
+
+          localStorage.setItem("recycleBin", JSON.stringify(data));
+
+
       const obj = {
         IMEI: localStorage.getItem("IMEI"),
         filestructure: props.entry,
-       
+        
       }
 
-      console.log("delete file obj...", obj)
+      console.log("delete file obj...", JSON.stringify(obj))
       
 
       const deleteResp = await axios({
         method: 'post',
         url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${props.entry.name}&filesize=${props.entry.size}`,
-        headers: {Accept: "application/json, text/plain, */*",
+        headers: {
                   authtoken: localStorage.getItem("authtoken")}, 
-        data: JSON.stringify(obj)
-        
+        data: {
+          IMEI: localStorage.getItem("IMEI"),
+          fileSystem: localStorage.getItem("fileSystem"),
+          recycleBin: localStorage.getItem("recycleBin")
+        }
 
       });
+
+      
 
       console.log("deleteResp...", deleteResp)
 
       localStorage.setItem("filled_per", deleteResp.data.storageFilled)
       localStorage.setItem("remaining_per", deleteResp.data.storageRemain)
 
+      props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
 
-      const resp =  await axios({
-            method: "post",
-            url: "https://api.sarvvid-ai.com/updatefileSystem",
-            headers: {
-              "Content-type": "application/json",
-              authtoken: localStorage.getItem("authtoken"),
-            },
-            data: {
-              IMEI: localStorage.getItem("IMEI"),
-              fileSystem: localStorage.getItem("fileSystem"),
-            },
-          })
-          props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
-      if(resp.success){
-        console.log("file system updated after deletion")
-      }
 
-      console.log("updatefilesystem response....", resp)
+      
 
     } catch (error) {
       console.log("Delete file...",error)
@@ -506,6 +549,8 @@ const Icon = (props) => {
 
 
   };
+
+
 
   const enterFolder = () => {
     if (props.entry.type === FOLDER)

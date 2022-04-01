@@ -144,9 +144,9 @@ const Card = (props) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps.match.url);
+  console.log("ownprops...",ownProps.match.url);
   const path = ownProps.match.url;
-  console.log(state.fileSystem);
+  console.log("mapstatetoprops...",state.fileSystem);
 
   return {
     entry: state.fileSystem[md5(path + FOLDER)]

@@ -60,7 +60,7 @@ const useFileRequestStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = ({ fileStructure, ...props }) => {
-  console.log("AAAAAAAAAAAAAAAAAAAA-->", props);
+  // console.log("AAAAAAAAAAAAAAAAAAAA-->", props);
   let children = fileStructure[0].children;
   const [toggle, handleToggle] = useState(true);
   const [sideDrawerToggle, setSideDrawerToggle] = useState(true);

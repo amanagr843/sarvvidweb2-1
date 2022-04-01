@@ -336,7 +336,9 @@ const RightPane = (props) => {
             <h2 className="storage_detail_heading" style = {{color: `${darkTheme ? "#ccc" : "#121212"}` }} >Storage</h2>
             <h3>SarvvidPro plan</h3>
           </div>
-          <h4>10GB</h4>
+          <h4>{`${totalStorage.toFixed(
+            0
+          )} GB`}</h4>
         </div>
         <Chart
           width={"100%"}
