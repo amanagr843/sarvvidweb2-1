@@ -54,9 +54,13 @@ function LoginForm(props) {
       [id]: value,
     }));
   };
+
+
   // const handleQRCode = () => {
   //   setQR(!QR);
   // };
+
+
   const handleSubmitClick = (e) => {
     e.preventDefault();
     const payload = {
@@ -141,10 +145,14 @@ function LoginForm(props) {
         });
     }
   };
+
+
   const redirectToHome = () => {
     props.updateTitle("Home");
     props.history.push("/");
   };
+
+
   const redirectToRegister = () => {
     props.history.push("/register");
     props.updateTitle("Register");
@@ -191,6 +199,8 @@ function LoginForm(props) {
     Y: "9723",
     Z: "b7c0",
   };
+
+
   let key =
     "541DBC699AD251F68C3C55A86C147CFD7C6D2E90BE9E170507B153560C8A65AAAFB2BB839B16F9DED96A41FE15406FEC0116BFDD7BCF7F27B827F2E047E8196DDF03E3A7C6364FD6626041CB8B8133051D969DC67E7ED6EF0944DE6A0BC96443225EE15C60AC49C17EEFA5AF3E54FECB19FD1573BF94C9D5198DB816FC814EF3";
   let enc = "";
@@ -203,6 +213,7 @@ function LoginForm(props) {
   const [loginOpened, setLoginOpened] = useState(false);
   const [splashOpened, setSplashOpened] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPass, setUserPass] = useState("");
   const [userPh, setUserPh] = useState("");
@@ -210,6 +221,14 @@ function LoginForm(props) {
   const [userCPass, setUserCPass] = useState("");
 
   // Functions
+
+  // clear credentials
+  const clearCredentials = () => {
+    setUserEmail("")
+    setUserPass("")
+    setUserCPass("")
+    setUserPh("")
+  }
 
   // forgot password
 
@@ -227,16 +246,22 @@ function LoginForm(props) {
 
       console.log("forgot pass resp...", resp);
 
-      if (resp.data.code == 404) {
-        alert(`No user found width this email ${userEmail}`);
-      } else if (resp.data.code == 200) {
-        alert(`check you mail to update password at ${userEmail}`);
-      }
+      
 
       setModalOpen(false);
     } catch (error) {
-      console.log(error);
+      console.log("forgotpass error...", error)
+      setCurrentScreen("loginerror")
+      if(error.response){
+        setErrorMsg(error.response.data.message)
+      } else {
+        setErrorMsg("We are having some network issues, try again after sometime")
+      }
+
     }
+
+    clearCredentials();
+
   };
 
   // register through sarvvid-web
@@ -383,35 +408,28 @@ function LoginForm(props) {
               localStorage.setItem("total", 20 * 1000 * 1000 * 1000);
           });
 
-        console.log("dfuysdgfuysdgfuysdgfsdfsdyfsyfds HI I am IN");
+        console.log("HI I AM IN");
         setState((prevState) => ({
           ...prevState,
-          successMessage: "Login successful. Redirecting to home page..",
+          successMessage: "Register successful. Redirecting to home page..",
         }));
         localStorage.setItem(ACCESS_TOKEN_NAME, 1);
 
-        props.updateTitle("Home");
-        props.history.push("/");
+        setCurrentScreen("regsuccess");
       }
-      if (resp.data.status === 409) {
-        alert(
-          "User already exists. try to login or register with another email."
-        );
-        throw "User already exists. try to login or register with another email.";
-      } else if (resp.data.status === 401) {
-        alert("User not verified. Check your email for verification.");
-        throw "User not verified. Check your email for verification.";
-      } else {
-        console.log("TRYING AGAIN<<<<<<<<<<<<<<");
-      }
+      
     } catch (error) {
       console.log("signup error...", error);
-      // if(resp.status === 409) {
-      //   alert("User already exists. try to login or register with another email.")
-      // } else if(resp.status === 401){
-      //   alert("User not verified. Check your email for verification.")
-      // }
+      setCurrentScreen("loginerror")
+      if(error.response){
+        setErrorMsg(error.response.data.message)
+      } else {
+        setErrorMsg("We are having some network issues, try again after sometime")
+      }
+     
     }
+
+    clearCredentials()
   };
 
   // login through sarvvid-web
@@ -560,19 +578,22 @@ function LoginForm(props) {
         props.history.push("/");
 
         window.location.reload();
-      } else if (resp.status === 206) {
-        alert(resp.data.message);
-        throw resp.data.message;
-      } else if (resp.data.code === 401) {
-        alert(resp.data.message);
-        throw resp.data.message;
       } else {
         console.log("TRYING AGAIN<<<<<<<<<<<<<<");
       }
     } catch (error) {
       console.log("login error...", error);
-      alert("Network error");
+      setCurrentScreen("loginerror");
+      if(error.response){
+        setErrorMsg(error.response.data.message)
+      } else {
+        setErrorMsg("We are having some network issues, try again after sometime")
+      }
+
+      // alert("Network error");
     }
+
+    clearCredentials();
   };
 
   const variants = {
@@ -642,16 +663,19 @@ function LoginForm(props) {
                   <p>Email</p>
                   <input
                     type="email"
+                    value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                   />
                   <p>Phone no.</p>
                   <input
                     type="number"
+                    value={userPh}
                     onChange={(e) => setUserPh(e.target.value)}
                   />
                   <p>Password</p>
                   <input
                     type="password"
+                    value={userPass}
                     onChange={(e) => setUserPass(e.target.value)}
                   />
                   <div className={"center"} style={{ textAlign: "center" }}>
@@ -680,12 +704,14 @@ function LoginForm(props) {
                   <p>Email</p>
                   <input
                     type="email"
+                    value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                   />
                   <p>Password</p>
 
                   <input
                     type="password"
+                    value={userPass}
                     onChange={(e) => setUserPass(e.target.value)}
                   />
 
@@ -718,7 +744,9 @@ function LoginForm(props) {
 
                   <h3 style={{ marginTop: "25px" }}>
                     Forgot your password?{" "}
-                    <span onClick={() => setModalOpen(true)}>Click here</span>
+                    <span onClick={() => setCurrentScreen("forgotpass")}>
+                      Click here
+                    </span>
                   </h3>
 
                   <h3>
@@ -754,20 +782,157 @@ function LoginForm(props) {
                   className={"center loginbuttons"}
                   style={{ textAlign: "center" }}
                 >
-                  <button type="submit" onClick={(e) => {
-                    setCurrentScreen("signin");
-                    e.preventDefault();
-                  }}>
+                  <button
+                    type="submit"
+                    onClick={(e) => {
+                      setCurrentScreen("signin");
+                      e.preventDefault();
+                    }}
+                  >
                     Go Back
                   </button>
                 </div>
                 <div>
-                  <h3 style={{textAlign:"center"}}>To use SarvvidBox on your computer:</h3>
-                  <ul style={{listStyle: "none"}}>
-                    <li style={{textAlign:"center"}} >Open SarvvidBox on your phone</li>
-                    <li style={{textAlign:"center"}}>Tap Menu or Settings and select SarvvidBox Web</li>
-                    <li style={{textAlign:"center"}}>Point your phone to this screen to capture the code</li>
+                  <ul style={{ listStyle: "none" }}>
+                    <li style={{ textAlign: "center" }}>
+                      To use SarvvidBox on your computer:
+                    </li>
+                    <li style={{ textAlign: "center" }}>
+                      Open SarvvidBox on your phone
+                    </li>
+                    <li style={{ textAlign: "center" }}>
+                      Tap Menu or Settings and select SarvvidBox Web
+                    </li>
+                    <li style={{ textAlign: "center" }}>
+                      Point your phone to this screen to capture the code
+                    </li>
                   </ul>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`form-container ${
+                !(currentScreen === "forgotpass") && "hidden"
+              } forgotpass-container`}
+            >
+              <div className="form">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <h1>Forgot Password</h1>
+                </div>
+                <p className={"forgotpassheader"}>
+                  Enter your email to recieve a reset link
+                </p>
+                <input
+                  type="email"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                />
+                <div
+                  className={"center loginbuttons"}
+                  style={{ textAlign: "center" }}
+                >
+                  <button
+                    type="Submit"
+                    onClick={(e) => {
+                      
+                      forgotPassHandler(e);
+                     
+                    }}
+                  >
+                    Submit
+                  </button>
+                  <button
+                    className="btn-md"
+                    onClick={(e) => {
+                      setCurrentScreen("signin");
+                      e.preventDefault();
+                    }}
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`form-container ${
+                !(currentScreen === "loginerror") && "hidden"
+              } loginerror-container`}
+            >
+              <div className="form">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <h1>Oops</h1>
+                </div>
+                
+                <p className={"forgotpassheader"}>
+                  {errorMsg}
+                </p>
+
+                <div
+                  className={"center loginbuttons"}
+                  style={{ textAlign: "center" }}
+                >
+                  <button
+                    type="Submit"
+                    onClick={(e) => {
+                      setCurrentScreen("signin");
+                      e.preventDefault();
+                    }}
+                  >
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className={`form-container ${
+                !(currentScreen === "regsuccess") && "hidden"
+              } loginerror-container`}
+            >
+              <div className="form">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <h1>Registered successfully</h1>
+                </div>
+                
+                <p className={"forgotpassheader"}>
+                  Please verify your email with the link recieved on your email.
+                </p>
+
+                <div
+                  className={"center loginbuttons"}
+                  style={{ textAlign: "center" }}
+                >
+                  <button
+                    type="Submit"
+                    onClick={(e) => {
+                      setCurrentScreen("signin");
+                      e.preventDefault();
+                    }}
+                  >
+                    Sign In
+                  </button>
                 </div>
               </div>
             </div>
@@ -777,40 +942,6 @@ function LoginForm(props) {
           <img className={`${!splashOpened && "hidden"}`} src={sarvvidLogo} />
         </div>
       </div>
-
-      <Modal
-        open={modalOpen}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        <div className="forgot-modal">
-          <div className="form">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <h1>Forgot Password</h1>
-              <CloseRoundedIcon
-                style={{ fontSize: "2rem", cursor: "pointer" }}
-                onClick={() => setModalOpen(false)}
-              />
-            </div>
-            <p>Email</p>
-            <input
-              type="email"
-              placeholder="Email"
-              onChange={(e) => setUserEmail(e.target.value)}
-            />
-            <button type="submit" onClick={(e) => forgotPassHandler(e)}>
-              Submit
-            </button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

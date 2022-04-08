@@ -420,213 +420,205 @@ const RightPane = (props) => {
           </div>
       </div>
       <div className="Detail-Modal">
-        <Modal
-          open={openUpgrade}
-          onClose={() => {
-            setOpenUpgrade(!openUpgrade);
-          }}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          className="upgrade_modal"
-        >
-          <div className={classesUpgrade.paper}>
-            <div className="div_upgrade_heading">
-              <h2 id="simple-modal-title" className="upgradeStorageHeading">
-                Upgrade Storage
-              </h2>
-              <hr style={{ borderTop: "1px solid rgba(0,179,255,0.3)" }} />
-            </div>
-            <div className="upgrade_plans_div">
-              <div className="upgrade_plan_div">
-                <div className="upgrade_plan_top">
-                  <p className="upgrade_plan_recommendation">&nbsp;</p>
-                  <p className="upgrade_plan_storage">20 GB</p>
-                  <p className="upgrade_plan_recommendation">Free</p>
-                  <p>&nbsp;</p>
-                  {current_plan === 20 ? (
-                    <button
-                      type="button"
-                      className="upgrade_plan_button"
-                      disabled={true}
-                    >
-                      Current Plan
-                    </button>
-                  ) : (
-                    <button type="button" className="upgrade_plan_button">
-                      &#8377; 0/month
-                    </button>
-                  )}
-                </div>
-                <hr />
-                <div className="upgrade_plan_bottom">
-                  <p style={{ margin: "2%" }}>Base Plan Includes:</p>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">20 GB storage</span>
+      <Modal
+            open={openUpgrade}
+            onClose={() => {
+              setOpenUpgrade(!openUpgrade);
+            }}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            className="upgrade_modal"
+            style={{ borderRadius: "40px" }}
+          >
+            <div className={classesUpgrade.paper}>
+              <div className="div_upgrade_heading">
+                <h2 id="simple-modal-title" className="upgradeStorageHeading">
+                  Upgrade your decentralized cloud
+                </h2>
+              </div>
+              <div className="upgrade_plans_div">
+                <div className="upgrade_plan_div">
+                  <div className="upgrade_plan_top">
+                    <h2>SarvvidBasic</h2>
+                    <h3>Free plan</h3>
+                  </div>
+                  <div className="upgrade_plan_mid">
+                    {/* <img src={UpgradeCircle20} alt="SarvvidBasic" /> */}
+                    <div className="upgrade_plan_mid_text">
+                      <p className="upgrade_plan_storage">20 GB</p>
+                    </div>
+                  </div>
+                  <div className="upgrade_plan_bottom">
+                    {/* features explainer */}
+                    <p style={{ margin: "2%" }}>Base Plan Includes:</p>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">20 GB storage</span>
+                    </div>
+                  </div>
+                  <div className="upgrade_plan_cta">
+                    {/* button */}
+                    {current_plan === 20 ? (
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        disabled={true}
+                      >
+                        Current Plan
+                      </button>
+                    ) : (
+                      <button type="button" className="upgrade_plan_button">
+                        &#8377; 0/month
+                      </button>
+                    )}
+                    <p style={{fontSize:"12px"}}>*monthly plan</p>
                   </div>
                 </div>
-              </div>
 
-              <div
-                className="upgrade_plan_div"
-                style={{ border: "5px solid rgb(0, 195, 255)" }}
-              >
-                <div className="upgrade_plan_top">
-                  <p className="upgrade_plan_recommendation">Recommended</p>
-                  <p className="upgrade_plan_storage">100 GB</p>
-                  <p className="upgrade_plan_recommendation">&nbsp;</p>
-                  <p>&nbsp;</p>
+                <div className="upgrade_plan_div">
+                  <div className="upgrade_plan_top">
+                    <h2>SarvvidPlus</h2>
+                    <h3>Advanced plan</h3>
+                  </div>
+                  <div className="upgrade_plan_mid">
+                    {/* <img src={UpgradeCircle100} alt="SarvvidPlus" /> */}
+                    <div className="upgrade_plan_mid_text">
+                      <p className="upgrade_plan_storage">100 GB</p>
+                    </div>
+                  </div>
+                  <div className="upgrade_plan_bottom">
+                    {/* features explainer */}
+                    <p style={{ margin: "2%" }}>Base Plan Includes:</p>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">20 GB storage</span>
+                    </div>
+                  </div>
+                  <div className="upgrade_plan_cta">
                   {current_plan === 100 ? (
-                    <button
-                      type="button"
-                      className="upgrade_plan_button"
-                      disabled={true}
-                    >
-                      Current Plan
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      style={{ color: "white", background: "#00b3ff" }}
-                      className="upgrade_plan_button"
-                    >
-                      &#8377; 130/month
-                    </button>
-                  )}
-                </div>
-                <hr />
-                <div className="upgrade_plan_bottom">
-                  <p style={{ margin: "2%" }}>Advanced Plan Includes:</p>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">100 GB storage</span>
-                  </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Access to Sarvvid experts
-                    </span>
-                  </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Option to add your family
-                    </span>
-                  </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Extra member benefits
-                    </span>
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        disabled={true}
+                      >
+                        Current Plan
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        onClick={(e) => displayRazorpay(e, 130)}
+                      >
+                        &#8377; 130/month
+                      </button>
+                    )}
+                    <p style={{fontSize:"12px"}}>*monthly plan</p>
                   </div>
                 </div>
-              </div>
-              <div className="upgrade_plan_div">
-                <div className="upgrade_plan_top">
-                  <p className="upgrade_plan_recommendation">&nbsp;</p>
-                  <p className="upgrade_plan_storage">200 GB</p>
-                  <p className="upgrade_plan_recommendation">&nbsp;</p>
-                  <p>&nbsp;</p>
-                  {current_plan === 200 ? (
-                    <button
-                      type="button"
-                      className="upgrade_plan_button"
-                      disabled={true}
-                    >
-                      Current Plan
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="upgrade_plan_button"
-                      onClick={(e) => displayRazorpay(e, 210)}
-                    >
-                      &#8377; 210/month
-                    </button>
-                  )}
-                </div>
-                <hr />
-                <div className="upgrade_plan_bottom">
-                  <p style={{ margin: "2%" }}>Pro Plan Includes:</p>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">200 GB storage</span>
-                  </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Access to Sarvvid experts
-                    </span>
-                  </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Option to add your family
-                    </span>
-                  </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Extra member benefits
-                    </span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="upgrade_plan_div">
-                <div className="upgrade_plan_top">
-                  <p className="upgrade_plan_recommendation">&nbsp;</p>
-                  <p className="upgrade_plan_storage">500 GB</p>
-                  <p className="upgrade_plan_recommendation">&nbsp;</p>
-                  <p>&nbsp;</p>
-                  {current_plan === 500 ? (
-                    <button
-                      type="button"
-                      className="upgrade_plan_button"
-                      disabled={true}
-                    >
-                      Current Plan
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="upgrade_plan_button"
-                      onClick={(e) => displayRazorpay(e, 530)}
-                    >
-                      &#8377; 530/month
-                    </button>
-                  )}
+                <div className="upgrade_plan_div">
+                  <div className="upgrade_plan_top">
+                    <h2>SarvvidPro</h2>
+                    <h3>Pro plan</h3>
+                  </div>
+                  <div className="upgrade_plan_mid">
+                    {/* <img src={UpgradeCircle200} alt="SarvvidPro" /> */}
+                    <div className="upgrade_plan_mid_text">
+                      <p className="upgrade_plan_storage">200 GB</p>
+                    </div>
+                  </div>
+                  <div className="upgrade_plan_bottom">
+                    {/* features explainer */}
+                    <p style={{ margin: "2%" }}>Base Plan Includes:</p>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">20 GB storage</span>
+                    </div>
+                  </div>
+                  <div className="upgrade_plan_cta">
+                  {current_plan === 200 ? (
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        disabled={true}
+                      >
+                        Current Plan
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        onClick={(e) => displayRazorpay(e, 210)}
+                      >
+                        &#8377; 210/month
+                      </button>
+                    )}
+                    <p style={{fontSize:"12px"}}>*monthly plan</p>
+                  </div>
                 </div>
-                <hr />
-                <div className="upgrade_plan_bottom">
-                  <p style={{ margin: "2%" }}>Advanced Plan Includes:</p>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">500 GB storage</span>
+
+
+                <div className="upgrade_plan_div">
+                  <div className="upgrade_plan_top">
+                    <h2>SarvvidMax</h2>
+                    <h3>Enterprise plan</h3>
                   </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Access to Sarvvid experts
-                    </span>
+                  <div className="upgrade_plan_mid">
+                    {/* <img src={UpgradeCircle500} alt="SarvvidMax" /> */}
+                    <div className="upgrade_plan_mid_text">
+                      <p className="upgrade_plan_storage">500 GB</p>
+                    </div>
                   </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Option to add your family
-                    </span>
+                  <div className="upgrade_plan_bottom">
+                    {/* features explainer */}
+                    <p style={{ margin: "2%" }}>Max Plan Includes:</p>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">100 GB storage</span>
+                    </div>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">
+                        Access to Sarvvid experts
+                      </span>
+                    </div>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">
+                        Option to add your family
+                      </span>
+                    </div>
+                    <div className="upgrade_plan_description">
+                      <CheckRoundedIcon className="upgrade_plan_tick" />
+                      <span className="upgrade_plan_info">
+                        Extra member benefits
+                      </span>
+                    </div>
                   </div>
-                  <div className="upgrade_plan_description">
-                    <CheckRoundedIcon className="upgrade_plan_tick" />
-                    <span className="upgrade_plan_info">
-                      Extra member benefits
-                    </span>
+                  <div className="upgrade_plan_cta">
+                  {current_plan === 500 ? (
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        disabled={true}
+                      >
+                        Current Plan
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="upgrade_plan_button"
+                        onClick={(e) => displayRazorpay(e, 510)}
+                      >
+                        &#8377; 510/month
+                      </button>
+                    )}
+                    <p style={{fontSize:"12px"}}>*monthly plan</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Modal>
+          </Modal>
       </div>
     </div>
   );

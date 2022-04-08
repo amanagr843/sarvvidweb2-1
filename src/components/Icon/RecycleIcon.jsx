@@ -523,6 +523,84 @@ const RecycleIcon = (props) => {
 
   };
 
+  const restoreFile = async () => {
+
+    try{
+        const data = JSON.parse(localStorage.getItem("fileSystem"));
+
+    console.log("fileSystem before...", data)
+
+    const pid = "982df30afbf36a499968df6508f68881"
+
+
+
+    var newEntry = {};
+        newEntry.parentPath = "/SarvvidBox";
+        newEntry.name = props.entry.name;
+
+        newEntry.type = FILE;
+        newEntry.path =
+          newEntry.parentPath === "/"
+            ? `${newEntry.parentPath}${newEntry.name}`
+            : `${newEntry.parentPath}/${newEntry.name}`;
+        let id = md5(newEntry.path + newEntry.type);
+
+        if (id in data) {
+          let arr = props.entry.name.split(".");
+          if (arr.length > 1)
+            newEntry.name =
+              arr.slice(0, arr.length - 1).join(".") +
+              "_" +
+              Date.now() +
+              "." +
+              arr[arr.length - 1];
+          else newEntry.name = arr[0] + "_" + Date.now();
+          console.log("Changing Name==========>>>", newEntry.name);
+          newEntry.path =
+            newEntry.parentPath === "/"
+              ? `${newEntry.parentPath}${newEntry.name}`
+              : `${newEntry.parentPath}/${newEntry.name}`;
+          id = md5(newEntry.path + newEntry.type);
+        }
+
+        if (newEntry.type === FOLDER) {
+          newEntry.children = [];
+        }
+        newEntry.creatorName = "User";
+        newEntry.size = props.entry.size;
+        newEntry.parentID = pid;
+        data[id] = newEntry;
+        data["982df30afbf36a499968df6508f68881"].children.push(id);
+
+        console.log("filesystem data after...", data)
+
+        localStorage.setItem("fileSystem", JSON.stringify(data));
+
+        const entryID = md5(entry.path + entry.type)
+        const newData = deleteEntry(JSON.parse(localStorage.getItem("recycleBin")), entryID)
+
+        const restoreResp = await axios({
+            method: 'post',
+            url: `https://api.sarvvid-ai.com/restore`,
+            headers: {
+                      authtoken: localStorage.getItem("authtoken")}, 
+            data: {
+              IMEI: localStorage.getItem("IMEI"),
+              fileSystem: localStorage.getItem("fileSystem"),
+              recycleBin: localStorage.getItem("recycleBin")
+            }
+    
+          });
+
+          console.log("restore response...", restoreResp)
+
+
+        window.location.reload();
+    } catch(error) {
+        console.log( "restore error...", error)
+    }
+  }
+
 
 
   const enterFolder = () => {
@@ -578,30 +656,7 @@ const RecycleIcon = (props) => {
         content={[
           {
             info: "Restore",
-            onClick: () => {
-              setLoading(true);
-              axios
-                .request({
-                  method: "get",
-                  url: `https://api.sarvvid-ai.com/cat?filehash=${
-                    entry.name
-                  }&IMEI=${localStorage.getItem(
-                    "IMEI"
-                  )}&ping=${localStorage.getItem("ping")}`,
-                  headers: {
-                    Accept: "application/json, text/plain, */*",
-                    Authtoken: localStorage.getItem("authtoken"),
-                    "Content-Type": "application/json",
-                  },
-                  responseType: "blob",
-                })
-                .then((response) => {
-                  setLoading(false);
-                  fileDownload(response.data, entry.name);
-
-                  console.log( "Download resp...", response);
-                });
-            },
+            onClick: () => {restoreFile()}
           },
           
           {

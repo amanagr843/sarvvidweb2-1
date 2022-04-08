@@ -48,6 +48,7 @@ const store = createStore(
       Object.keys(localStorage.getItem("fileSystem")).length > 0
         ? JSON.parse(localStorage.getItem("fileSystem"))
         : generatedummyFileSystem(),
+    
   },
   composeWithDevTools()
 );
