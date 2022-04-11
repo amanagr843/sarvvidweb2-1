@@ -89,6 +89,7 @@ function LoginForm(props) {
             Accept: "application/json, text/plain, */*",
             Authtoken: state.authtoken, // It can be used to overcome cors errors
             "Content-Type": "application/json",
+            verificationToken: enc
           }
         )
         .then(function (response) {
@@ -239,6 +240,7 @@ function LoginForm(props) {
       const resp = await axios({
         method: "post",
         url: "https://api.sarvvid-ai.com/forgetpassword",
+        headers: { authtoken: enc },
         data: {
           email: userEmail,
         },
@@ -282,7 +284,7 @@ function LoginForm(props) {
       const resp = await axios({
         method: "post",
         url: `https://api.sarvvid-ai.com/webregister`,
-        headers: { authtoken: enc },
+        headers: { verificationToken: enc },
         data: {
           email: userEmail,
           password: userPass,
@@ -363,6 +365,7 @@ function LoginForm(props) {
               Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
               "Content-Type": "application/json",
               Authtoken: localStorage.getItem("authtoken"),
+              verificationToken: enc
             },
             data: JSON.stringify({
               IMEI: localStorage.getItem("IMEI"),
@@ -443,10 +446,12 @@ function LoginForm(props) {
       console.log("user Pass...", userPass);
       console.log("user Mail...", userEmail);
 
+      console.log("enc key...", enc)
+
       const resp = await axios({
         method: "post",
         url: `https://api.sarvvid-ai.com/weblogin`,
-        headers: { authtoken: enc },
+        headers: { verificationToken: enc },
         data: {
           email: userEmail,
           password: userPass,
@@ -522,6 +527,7 @@ function LoginForm(props) {
               Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
               "Content-Type": "application/json",
               Authtoken: localStorage.getItem("authtoken"),
+              verificationToken: enc
             },
             data: JSON.stringify({
               IMEI: localStorage.getItem("IMEI"),

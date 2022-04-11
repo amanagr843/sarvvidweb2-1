@@ -22,6 +22,7 @@ import Box from "@material-ui/core/Box";
 import md5 from "md5";
 import {useTheme} from "../../contexts/themeContext"
 import "./styles.css"
+import getEnc from "../../utils/enc";
 import { deleteEntry } from "../../actions/fileSystem";
 
 // class Icon extends Component {
@@ -348,6 +349,7 @@ const RecycleIcon = (props) => {
   
   const nodeRef = useRef()
   const darkTheme = useTheme()
+  const enc = getEnc()
 
   const [visible, setVisible] = useState(false);
   const [showInfo, setShowInfo] = useState(false)
@@ -494,11 +496,15 @@ const RecycleIcon = (props) => {
         method: 'post',
         url: `https://api.sarvvid-ai.com/deletepermanently`,
         headers: {
-                  authtoken: localStorage.getItem("authtoken")}, 
+                  authtoken: localStorage.getItem("authtoken"),
+                  verificationToken: enc
+
+                }, 
         data: {
           IMEI: localStorage.getItem("IMEI"),
           fileSystem: localStorage.getItem("fileSystem"),
-          recycleBin: localStorage.getItem("recycleBin")
+          recycleBin: localStorage.getItem("recycleBin"),
+          fileEntry: props.entry,
         }
 
       });
@@ -583,11 +589,15 @@ const RecycleIcon = (props) => {
             method: 'post',
             url: `https://api.sarvvid-ai.com/restore`,
             headers: {
-                      authtoken: localStorage.getItem("authtoken")}, 
+                      authtoken: localStorage.getItem("authtoken"),
+                    verificationToken: enc
+
+                    }, 
             data: {
               IMEI: localStorage.getItem("IMEI"),
               fileSystem: localStorage.getItem("fileSystem"),
-              recycleBin: localStorage.getItem("recycleBin")
+              recycleBin: localStorage.getItem("recycleBin"),
+              fileEntry: props.entry
             }
     
           });

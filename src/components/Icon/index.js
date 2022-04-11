@@ -20,6 +20,7 @@ import Box from "@material-ui/core/Box";
 
 // New
 import md5 from "md5";
+import getEnc from "../../utils/enc";
 import {useTheme} from "../../contexts/themeContext"
 import "./styles.css"
 
@@ -347,6 +348,7 @@ const Icon = (props) => {
   
   const nodeRef = useRef()
   const darkTheme = useTheme()
+  const enc = getEnc()
 
   const [visible, setVisible] = useState(false);
   const [showInfo, setShowInfo] = useState(false)
@@ -500,11 +502,14 @@ const Icon = (props) => {
         method: 'post',
         url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${props.entry.name}&filesize=${props.entry.size}`,
         headers: {
-                  authtoken: localStorage.getItem("authtoken")}, 
+                  authtoken: localStorage.getItem("authtoken"),
+                  verificationToken: enc
+                }, 
         data: {
           IMEI: localStorage.getItem("IMEI"),
           fileSystem: localStorage.getItem("fileSystem"),
-          recycleBin: localStorage.getItem("recycleBin")
+          recycleBin: localStorage.getItem("recycleBin"),
+          fileEntry: props.entry
         }
 
       });
@@ -597,6 +602,8 @@ const Icon = (props) => {
                     Accept: "application/json, text/plain, */*",
                     Authtoken: localStorage.getItem("authtoken"),
                     "Content-Type": "application/json",
+                    verificationToken: enc
+
                   },
                   responseType: "blob",
                 })

@@ -24,6 +24,7 @@ import uploadIcon from "../../../assets/img/upload.svg"
 import uploadDarkIcon from "../../../assets/img/uploaddark.svg"
 import "./styles.css"
 import {useTheme} from "../../../contexts/themeContext"
+import getEnc from "../../../utils/enc";
 import { virgilCrypto } from "react-native-virgil-crypto"
 
 const StyledMenu = withStyles({
@@ -61,6 +62,7 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function CustomizedMenus(props) {
 
   const darkTheme = useTheme();
+  const enc = getEnc()
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     getFilesFromEvent: (event) => myCustomFileGetter(event),
@@ -160,6 +162,7 @@ export default function CustomizedMenus(props) {
       headers: {
         "Content-type": "multipart/form-data",
         Authtoken: at,
+        verificationToken: enc
       },
       data: formData,
       onUploadProgress: function (progressEvent) {
@@ -246,6 +249,7 @@ export default function CustomizedMenus(props) {
             headers: {
               "Content-type": "application/json",
               authtoken: localStorage.getItem("authtoken"),
+              verificationToken: enc
             },
             data: {
               IMEI: localStorage.getItem("IMEI"),
@@ -355,6 +359,7 @@ export default function CustomizedMenus(props) {
       headers: {
         "Content-type": "multipart/form-data",
         Authtoken: at,
+        verificationToken: enc
       },
       data: formData,
       onUploadProgress: function (progressEvent) {
@@ -516,6 +521,7 @@ export default function CustomizedMenus(props) {
             headers: {
               "Content-type": "application/json",
               authtoken: localStorage.getItem("authtoken"),
+              verificationToken: enc
             },
             data: {
               IMEI: localStorage.getItem("IMEI"),
@@ -545,6 +551,7 @@ export default function CustomizedMenus(props) {
             headers: {
               "Content-type": "application/json",
               authtoken: localStorage.getItem("authtoken"),
+              verificationToken: enc
             },
             data: JSON.stringify({
               IMEI: localStorage.getItem("IMEI"),
