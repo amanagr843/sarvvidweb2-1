@@ -430,7 +430,7 @@ const RightPane = (props) => {
             className="upgrade_modal"
             style={{ borderRadius: "40px" }}
           >
-            <div className={classesUpgrade.paper}>
+            <div className="modal_inner">
               <div className="div_upgrade_heading">
                 <h2 id="simple-modal-title" className="upgradeStorageHeading">
                   Upgrade your decentralized cloud
@@ -442,7 +442,7 @@ const RightPane = (props) => {
                     <h2>SarvvidBasic</h2>
                     <h3>Free plan</h3>
                   </div>
-                  <div className="upgrade_plan_mid">
+                  <div className="upgrade_plan_mid1">
                     {/* <img src={UpgradeCircle20} alt="SarvvidBasic" /> */}
                     <div className="upgrade_plan_mid_text">
                       <p className="upgrade_plan_storage">20 GB</p>
@@ -480,7 +480,7 @@ const RightPane = (props) => {
                     <h2>SarvvidPlus</h2>
                     <h3>Advanced plan</h3>
                   </div>
-                  <div className="upgrade_plan_mid">
+                  <div className="upgrade_plan_mid2">
                     {/* <img src={UpgradeCircle100} alt="SarvvidPlus" /> */}
                     <div className="upgrade_plan_mid_text">
                       <p className="upgrade_plan_storage">100 GB</p>
@@ -521,7 +521,7 @@ const RightPane = (props) => {
                     <h2>SarvvidPro</h2>
                     <h3>Pro plan</h3>
                   </div>
-                  <div className="upgrade_plan_mid">
+                  <div className="upgrade_plan_mid3">
                     {/* <img src={UpgradeCircle200} alt="SarvvidPro" /> */}
                     <div className="upgrade_plan_mid_text">
                       <p className="upgrade_plan_storage">200 GB</p>
@@ -563,7 +563,7 @@ const RightPane = (props) => {
                     <h2>SarvvidMax</h2>
                     <h3>Enterprise plan</h3>
                   </div>
-                  <div className="upgrade_plan_mid">
+                  <div className="upgrade_plan_mid4">
                     {/* <img src={UpgradeCircle500} alt="SarvvidMax" /> */}
                     <div className="upgrade_plan_mid_text">
                       <p className="upgrade_plan_storage">500 GB</p>

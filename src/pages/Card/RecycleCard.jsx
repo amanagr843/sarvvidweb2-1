@@ -105,7 +105,7 @@ const RecycleCard = (props) => {
 
   return (
       <div>
-           { props.entry[0] ? 
+           { recycleFiles[0] ? 
           <div className={`midPane_cards ${darkTheme ? "dark-theme" : ""}`}  >
             
             <SEO

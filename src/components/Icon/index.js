@@ -518,8 +518,7 @@ const Icon = (props) => {
 
       console.log("deleteResp...", deleteResp)
 
-      localStorage.setItem("filled_per", deleteResp.data.storageFilled)
-      localStorage.setItem("remaining_per", deleteResp.data.storageRemain)
+      
 
       props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
 

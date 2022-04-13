@@ -346,6 +346,8 @@ import { deleteEntry } from "../../actions/fileSystem";
 // }
 
 const RecycleIcon = (props) => {
+
+  console.log("recycle entry...", props.entry)
   
   const nodeRef = useRef()
   const darkTheme = useTheme()
@@ -536,12 +538,12 @@ const RecycleIcon = (props) => {
 
     console.log("fileSystem before...", data)
 
-    const pid = "982df30afbf36a499968df6508f68881"
+    const pid = "1382b6993e9f270cb1c29833be3f5750"
 
 
 
     var newEntry = {};
-        newEntry.parentPath = "/SarvvidBox";
+        newEntry.parentPath = "/";
         newEntry.name = props.entry.name;
 
         newEntry.type = FILE;
@@ -576,7 +578,7 @@ const RecycleIcon = (props) => {
         newEntry.size = props.entry.size;
         newEntry.parentID = pid;
         data[id] = newEntry;
-        data["982df30afbf36a499968df6508f68881"].children.push(id);
+        data["1382b6993e9f270cb1c29833be3f5750"].children.push(id);
 
         console.log("filesystem data after...", data)
 
@@ -644,6 +646,7 @@ const RecycleIcon = (props) => {
   }
 
   return (
+    props.entry.name != "root" ? 
     <Container ref={nodeRef} onClick={() => enterFolder()}  className = {`card-container ${darkTheme ? "dark-theme" : ""}`}  >
     <div className="file-card">
       <div className="file-name">
@@ -700,7 +703,7 @@ const RecycleIcon = (props) => {
       ""
     )}
     {loading ? <LoadingContainer /> : ""}
-  </Container>
+  </Container> : "" 
   )
 }
 

@@ -102,7 +102,7 @@ const Card = (props) => {
 
   return (
       <div>
-           { props.entry[0] ? 
+           { true ? 
           <div className={`midPane_cards ${darkTheme ? "dark-theme" : ""}`}  >
             
             <SEO
