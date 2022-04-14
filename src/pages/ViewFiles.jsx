@@ -18,7 +18,8 @@ import CustomizedMenus from "../components/Sidebar/AddBtn/CustomizedMenus";
 import { addEntry, deleteEntry, setEntry } from "../actions/fileSystem";
 import { connect } from "react-redux";
 import { generateTreeFromList } from "../utils/fileSystem";
-
+import { FOLDER } from "../utils/constants";
+import md5 from "md5";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,6 +100,8 @@ const ViewFiles = (props) => {
 const mapStateToProps = (state, ownProps) => {
   const fileStructure = generateTreeFromList(state.fileSystem);
 
+  console.log("map st...", fileStructure)
+
   // const path = ownProps.match.url;
   return {
     fileStructure,
@@ -106,6 +109,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 
-export default connect(mapStateToProps, { addEntry, deleteEntry, setEntry })(
-  ViewFiles
-);
+
+export default ViewFiles

@@ -148,6 +148,8 @@ const mapStateToProps = (state, ownProps) => {
   const path = ownProps.match.url;
   console.log("mapstatetoprops...",state.fileSystem);
 
+  
+
   return {
     entry: state.fileSystem[md5(path + FOLDER)]
       ? state.fileSystem[md5(path + FOLDER)].children.map(

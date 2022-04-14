@@ -538,12 +538,12 @@ const RecycleIcon = (props) => {
 
     console.log("fileSystem before...", data)
 
-    const pid = "1382b6993e9f270cb1c29833be3f5750"
+    const pid = "4df0f3ed7a5afc9e597b755953488a54"
 
 
 
     var newEntry = {};
-        newEntry.parentPath = "/";
+        newEntry.parentPath = "/Restored";
         newEntry.name = props.entry.name;
 
         newEntry.type = FILE;
@@ -578,7 +578,7 @@ const RecycleIcon = (props) => {
         newEntry.size = props.entry.size;
         newEntry.parentID = pid;
         data[id] = newEntry;
-        data["1382b6993e9f270cb1c29833be3f5750"].children.push(id);
+        data["4df0f3ed7a5afc9e597b755953488a54"].children.push(id);
 
         console.log("filesystem data after...", data)
 
