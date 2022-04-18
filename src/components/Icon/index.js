@@ -565,6 +565,7 @@ const Icon = (props) => {
   }
 
   return (
+    props.entry.name === "Restored" && props.entry.children.length === 0 ? "" : 
     <Container ref={nodeRef} onClick={() => enterFolder()}  className = {`card-container ${darkTheme ? "dark-theme" : ""}`}  >
     <div className="file-card">
       <div className="file-name">

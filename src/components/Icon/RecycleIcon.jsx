@@ -534,7 +534,23 @@ const RecycleIcon = (props) => {
   const restoreFile = async () => {
 
     try{
-        const data = JSON.parse(localStorage.getItem("fileSystem"));
+    const data = JSON.parse(localStorage.getItem("fileSystem"));
+
+    if(!data.hasOwnProperty("4df0f3ed7a5afc9e597b755953488a54")){
+      data["1382b6993e9f270cb1c29833be3f5750"].children.push(md5("/Restored" + "__folder__"));
+      var restored = {};
+      restored.name = "Restored";
+      restored.type = "__folder__";
+      restored.creatorName = "";
+      restored.size = 0;
+      restored.path = "/Restored";
+      restored.parentPath = "/";
+      restored.children = [];
+      restored.date = "";
+      restored.parentID = md5("/" + "__folder__");
+      const restoreID = md5("/Restored" + "__folder__");
+      data[restoreID] = restored;
+    }
 
     console.log("fileSystem before...", data)
 
