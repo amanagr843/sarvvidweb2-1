@@ -10,6 +10,7 @@ import SearchBar from '../components/SearchBar';
 import {useTheme, useThemeUpdate, useMenuToggle} from "../contexts/themeContext"
 
 // New
+import Loader from "../components/Loader/Loader";
 import moonIcon from '../assets/img/moon.svg'
 import sunIcon from "../assets/img/sun.svg"
 import gridIcon from "../assets/img/grid.svg"
@@ -49,6 +50,7 @@ const ViewFiles = (props) => {
 
   return (
     <div className={`middlePane ${toggleMenu ? "" : "opened"} ${darkTheme ? "dark-theme" : ""}` }  >
+      
       <div className="middlePane_upper">
         <SearchBar />
         <div className={`theme-toggle ${darkTheme ? "dark" : ""}`} onClick={() => toggleTheme()} >

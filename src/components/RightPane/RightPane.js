@@ -19,7 +19,7 @@ import axios from "axios";
 
 // New
 // import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
-
+import Loader from "../Loader/Loader"
 import AccountIcon from "../../assets/img/account.svg"
 import LogoutIcon from "../../assets/img/logout.svg"
 import {useTheme} from "../../contexts/themeContext"
@@ -103,6 +103,7 @@ const RightPane = (props) => {
   const fileChange = useSelector((state) => state.fileSystem);
   const darkTheme = useTheme();
 
+  const [isLoading, setIsLoading] = useState(false)
   const [usedStorage, setUsedStorage] = useState(0);
   const [unusedStorage, setUnusedStorage] = useState(0);
   const [remainingGB, setRemainingGB] = useState(0);
@@ -244,21 +245,30 @@ const RightPane = (props) => {
 
   async function displayRazorpay(e, price) {
     setOpenUpgrade(false);
+    setIsLoading(true)
     e.preventDefault();
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
     if (!res) {
       alert("razorpay SDK failed to load. Are you online?");
+      setIsLoading(false)
       return;
     }
+
+    
+
+
     var orderData = {
-      amount: price * 100, // rupees in paise
+      planType: price, // rupees in paise
     };
     const result = await axios.post(
       "https://api.sarvvid-ai.com/payment/orders",
       orderData
     );
+
+    console.log('payment orders...', result)
+
     if (!result) {
       alert("Server error, are you online?");
       return;
@@ -279,18 +289,23 @@ const RightPane = (props) => {
           razorpayPaymentId: response.razorpay_payment_id,
           razorpayOrderId: response.razorpay_order_id,
           razorpaySignature: response.razorpay_signature,
-          amount: price * 100,
+          uniqueID: localStorage.getItem("IMEI"),
+          planType: price
+
         };
 
         const result = await axios.post(
           "https://api.sarvvid-ai.com/payment/success",
           data
         );
-        if (!result) {
-          console.log(result.data);
-        }
 
-        alert(result.data.msg);
+        console.log("Payment success...", result)
+
+        
+
+        
+
+        alert(result.data.message);
       },
       prefill: {
         name: "Sarvvid AI",
@@ -307,6 +322,12 @@ const RightPane = (props) => {
 
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
+
+    console.log("razorpay...", res)
+    if(res == true){
+      setIsLoading(false)
+    }
+
   }
 
   return (
@@ -314,6 +335,7 @@ const RightPane = (props) => {
       className="rightPane"
       style={{ background: `${darkTheme ? "#121212" : "#fff"}` }}
     >
+      {isLoading ? <Loader/> : ""}
       <div className="rightPane_user">
         <div className="user_info">
           <img src={AccountIcon} alt="account" />
@@ -507,7 +529,7 @@ const RightPane = (props) => {
                       <button
                         type="button"
                         className="upgrade_plan_button"
-                        onClick={(e) => displayRazorpay(e, 130)}
+                        onClick={(e) => displayRazorpay(e, "sarvvidPlus")}
                       >
                         &#8377; 130/month
                       </button>
@@ -548,7 +570,7 @@ const RightPane = (props) => {
                       <button
                         type="button"
                         className="upgrade_plan_button"
-                        onClick={(e) => displayRazorpay(e, 210)}
+                        onClick={(e) => displayRazorpay(e, "sarvvidPro")}
                       >
                         &#8377; 210/month
                       </button>
@@ -608,7 +630,7 @@ const RightPane = (props) => {
                       <button
                         type="button"
                         className="upgrade_plan_button"
-                        onClick={(e) => displayRazorpay(e, 510)}
+                        onClick={(e) => displayRazorpay(e, "sarvvidMax")}
                       >
                         &#8377; 510/month
                       </button>

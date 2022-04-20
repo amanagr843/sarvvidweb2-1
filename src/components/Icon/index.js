@@ -576,7 +576,7 @@ const Icon = (props) => {
         <Name className="name" >{entry.name}</Name>
       </div>
       <div className="file-size">
-        <p>{getSize(entry.size)}</p>
+        <p>{ props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
       </div>
       <div className="file-type">
         <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
