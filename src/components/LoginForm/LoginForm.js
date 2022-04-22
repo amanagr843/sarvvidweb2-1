@@ -18,7 +18,7 @@ import qrCodeIcon from "../../assets/img/qr_icon.svg";
 import { motion, useAnimation } from "framer-motion";
 
 // NEW ONES
-
+import { getStorage, setStorage } from "../../utils/storageHandler"
 import { v4 as uuid } from "uuid";
 import { sha256 } from "js-sha256";
 import { setEntry } from "../../actions/fileSystem";
@@ -470,8 +470,9 @@ function LoginForm(props) {
         localStorage.setItem("ping", 130);
         localStorage.setItem("user_name", resp.data.username);
         localStorage.setItem("user_number", resp.data.phone);
-        localStorage.setItem("filled_per", resp.data.storageFilled);
-        localStorage.setItem("remaining_per", resp.data.storageRemain);
+
+        const storageData = setStorage(resp.data.used_bytes, resp.data.current_storage)
+
         
 
         const temp = resp.data.data;

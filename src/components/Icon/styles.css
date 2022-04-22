@@ -89,6 +89,12 @@
     color: #fff;
 }
 
+.lottie{
+    position: absolute;
+    bottom: 0rem;
+    right: 0rem;
+}
+
 @media(max-width:1000px){
     .name{
         margin-left: .5rem;

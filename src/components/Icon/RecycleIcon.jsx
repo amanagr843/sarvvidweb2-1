@@ -20,6 +20,7 @@ import Box from "@material-ui/core/Box";
 
 // New
 import md5 from "md5";
+import { setStorage, getStorage } from "../../utils/storageHandler"
 import {useTheme} from "../../contexts/themeContext"
 import "./styles.css"
 import getEnc from "../../utils/enc";
@@ -515,8 +516,7 @@ const RecycleIcon = (props) => {
 
       console.log("deleteResp...", deleteResp)
 
-      localStorage.setItem("filled_per", deleteResp.data.storageFilled)
-      localStorage.setItem("remaining_per", deleteResp.data.storageRemain)
+      setStorage(deleteResp.data.used_bytes, deleteResp.data.current_storage)
 
       props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
 

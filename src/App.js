@@ -147,33 +147,33 @@ function App() {
       });
   }, []);
 
-  const checkOnce = setInterval(() => {
-    if (online) {
-      Axios.get("https://randomfox.ca/floof/")
-        .then((response) => {
+  // const checkOnce = setInterval(() => {
+  //   if (online) {
+  //     Axios.get("https://randomfox.ca/floof/")
+  //       .then((response) => {
           
-        })
-        .catch((error) => {
-          setOnline(false);
-          clearInterval(checkOnce);
-        });
-    }
-  }, 1000);
-  const handleOnlineClick = () => {
-    setOnline(true);
-    const checkOnline = setInterval(() => {
-      if (online) {
-        Axios.get("https://randomfox.ca/floof/")
-          .then((response) => {
-            console.log(online);
-          })
-          .catch((error) => {
-            setOnline(false);
-            clearInterval(checkOnline);
-          });
-      }
-    }, 1000);
-  };
+  //       })
+  //       .catch((error) => {
+  //         setOnline(false);
+  //         clearInterval(checkOnce);
+  //       });
+  //   }
+  // }, 1000);
+  // const handleOnlineClick = () => {
+  //   setOnline(true);
+  //   const checkOnline = setInterval(() => {
+  //     if (online) {
+  //       Axios.get("https://randomfox.ca/floof/")
+  //         .then((response) => {
+  //           console.log(online);
+  //         })
+  //         .catch((error) => {
+  //           setOnline(false);
+  //           clearInterval(checkOnline);
+  //         });
+  //     }
+  //   }, 1000);
+  // };
   return (
     <Provider store={store}>
       <ThemeProvider>
@@ -187,7 +187,7 @@ function App() {
                
                 
                 <Route path="/login" exact={true}>
-                  {online ? "" : <CheckOnline click={handleOnlineClick} />}
+                  {/* {online ? "" : <CheckOnline click={handleOnlineClick} />} */}
                   <LoginForm
                     showError={updateErrorMessage}
                     updateTitle={updateTitle}
@@ -198,7 +198,7 @@ function App() {
                
                 <PrivateRoute path="/">
                   <div className={`Dashboard ${darkTheme ? "dark" : ""}`}>
-                    {online ? "" : <CheckOnline click={handleOnlineClick} />}
+                    {/* {online ? "" : <CheckOnline click={handleOnlineClick} />} */}
                     <Route
                         path="*"
                         render={(props) => (

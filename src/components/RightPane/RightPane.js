@@ -19,6 +19,7 @@ import axios from "axios";
 
 // New
 // import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import {getStorage, setStorage} from "../../utils/storageHandler"
 import Loader from "../Loader/Loader"
 import AccountIcon from "../../assets/img/account.svg"
 import LogoutIcon from "../../assets/img/logout.svg"
@@ -112,21 +113,18 @@ const RightPane = (props) => {
 
   useEffect(() => {
     setUsedStorage(
-      parseFloat(localStorage.getItem("filled_per") / 100) *
-        (parseFloat(localStorage.getItem("total")) / 1000000000)
+      localStorage.getItem("used_bytes")/1000000000
     );
 
     setUnusedStorage(
-      parseFloat(localStorage.getItem("remaining_per") / 100) *
-        (parseFloat(localStorage.getItem("total")) / 1000000000)
+      (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))
     );
 
     setRemainingGB(
-      (parseFloat(localStorage.getItem("total")) / 1000000000) *
-        parseFloat(localStorage.getItem("remaining_per") / 100)
+      (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))/1000000000
     );
 
-    setTotalStorage(parseFloat(localStorage.getItem("total")) / 1000000000);
+    setTotalStorage(parseFloat(localStorage.getItem("total_bytes")) / 1000000000);
 
     setUsedStorageGb(totalStorage - remainingGB);
 
@@ -189,7 +187,7 @@ const RightPane = (props) => {
   // }, [fileChange]);
   let used = isNaN(props.a) ? 100 : (props.a / props.b) * 100;
   let unused = isNaN(props.b) ? 0 : ((props.b - props.a) / props.b) * 100;
-  //Logout Functionality Starts
+  
   const capitalize = (s) => {
     if (typeof s !== "string") return "";
     return s.charAt(0).toUpperCase() + s.slice(1);
@@ -260,7 +258,9 @@ const RightPane = (props) => {
 
 
     var orderData = {
-      planType: price, // rupees in paise
+      planType: price,
+      uniqueID: localStorage.getItem("IMEI")
+
     };
     const result = await axios.post(
       "https://api.sarvvid-ai.com/payment/orders",
@@ -299,10 +299,26 @@ const RightPane = (props) => {
           data
         );
 
-        console.log("Payment success...", result)
+        console.log("Payment success...", result);
 
         
-
+        setStorage(result.data.used_bytes, result.data.updatedStorage)
+        
+        setUsedStorage(
+          localStorage.getItem("used_bytes")/1000000000
+        );
+    
+        setUnusedStorage(
+          (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))
+        );
+    
+        setRemainingGB(
+          (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))/1000000000
+        );
+    
+        setTotalStorage(parseFloat(localStorage.getItem("total_bytes")) / 1000000000);
+    
+        setUsedStorageGb(totalStorage - remainingGB);
         
 
         alert(result.data.message);

@@ -20,6 +20,8 @@ import Box from "@material-ui/core/Box";
 
 // New
 import md5 from "md5";
+import Lottie from "react-lottie";
+import deleteLottieData from "../../assets/Lotties/delete.json"
 import getEnc from "../../utils/enc";
 import {useTheme} from "../../contexts/themeContext"
 import "./styles.css"
@@ -355,6 +357,15 @@ const Icon = (props) => {
   const [style, setStyle] = useState({right:0, left:0})
   const [loading, setLoading] = useState(false)
   const [prevStyle, setPrevStyle] = useState({})
+
+  const defaultLottieOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: deleteLottieData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  };
   
   console.log("Entry in Icon...", props.entry)
 
@@ -567,8 +578,16 @@ const Icon = (props) => {
   return (
     props.entry.name === "Restored" && props.entry.children.length === 0 ? "" : 
     <Container ref={nodeRef} onClick={() => enterFolder()}  className = {`card-container ${darkTheme ? "dark-theme" : ""}`}  >
+      {/* <div className="lottie">
+      <Lottie 
+        options={defaultLottieOptions}
+          height={40}
+          width={40}
+        />
+      </div> */}
     <div className="file-card">
       <div className="file-name">
+      
         <Logo onClick={() => enterFolder()}>
         <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
         {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}

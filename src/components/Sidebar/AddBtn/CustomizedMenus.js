@@ -25,6 +25,7 @@ import uploadDarkIcon from "../../../assets/img/uploaddark.svg"
 import "./styles.css"
 import {useTheme} from "../../../contexts/themeContext"
 import getEnc from "../../../utils/enc";
+import { getStorage, setStorage } from "../../../utils/storageHandler"
 import { virgilCrypto } from "react-native-virgil-crypto"
 
 const StyledMenu = withStyles({
@@ -188,8 +189,7 @@ export default function CustomizedMenus(props) {
           console.log("New auth token...",response.data.newtoken);
           localStorage.setItem("authtoken", response.data.newtoken);
           console.log("upload resp...", response)
-          localStorage.setItem("filled_per", response.data.storageFilled)
-          localStorage.setItem("remaining_per", response.data.storageRemain)
+          const storageData = setStorage(response.data.used_bytes, response.data.current_storage)
           setDisableUploadButton(false);
           const values = {
             type: FILE,
