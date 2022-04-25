@@ -10,7 +10,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import AlertComponent from "./components/AlertComponent/AlertComponent";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import Icon from "@material-ui/core/Icon";
 // import { BrowserRouter } from "react-router-dom";
@@ -40,6 +40,9 @@ import {ThemeProvider, useTheme} from "./contexts/themeContext"
 
 const useStyles = makeStyles(styles);
 const rootEl = document.getElementById("root");
+
+
+
 const store = createStore(
   reducers,
   {
@@ -48,8 +51,13 @@ const store = createStore(
       Object.keys(localStorage.getItem("fileSystem")).length > 0
         ? JSON.parse(localStorage.getItem("fileSystem"))
         : generatedummyFileSystem(),
-    
+    recycleBin:
+      localStorage.getItem("recycleBin") &&
+      Object.keys(localStorage.getItem("recycleBin")).length > 0
+        ? JSON.parse(localStorage.getItem("recycleBin"))
+        : generatedummyFileSystem(),
   },
+  
   composeWithDevTools()
 );
 

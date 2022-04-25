@@ -518,9 +518,9 @@ const RecycleIcon = (props) => {
 
       setStorage(deleteResp.data.used_bytes, deleteResp.data.current_storage)
 
-      props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
+      props.setRecycleEntry(JSON.parse(localStorage.getItem("recycleBin")));
 
-      window.location.reload()
+      // window.location.reload()
 
       
 
@@ -622,8 +622,10 @@ const RecycleIcon = (props) => {
 
           console.log("restore response...", restoreResp)
 
+          props.setRecycleEntry(JSON.parse(localStorage.getItem("recycleBin")));
+          props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
 
-        window.location.reload();
+        // window.location.reload();
     } catch(error) {
         console.log( "restore error...", error)
     }

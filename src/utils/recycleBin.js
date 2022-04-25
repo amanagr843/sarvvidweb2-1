@@ -29,7 +29,7 @@ export const DeleteRecycleEntry = (data, entryID) => {
   const entry = data[entryID];
   if (entry.type === FOLDER) {
     entry.children.forEach((id) => {
-      DeleteEntry(data, id);
+      DeleteRecycleEntry(data, id);
     });
   }
   let parentID = data[entryID].parentID;

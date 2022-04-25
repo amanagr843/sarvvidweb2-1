@@ -75,6 +75,8 @@ const Card = (props) => {
   const [entryState, setEntryState] = useState(props.entry)
   const darkTheme = useTheme();
 
+  console.log("filesystem Card props...", props)
+
   
 
 

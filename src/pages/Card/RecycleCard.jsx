@@ -6,7 +6,9 @@ import SEO from "../../components/SEO";
 
 import { showPathEntries, entriesAreSame } from "../../utils/fileSystem";
 import { FOLDER } from "../../utils/constants";
-import { addEntry, deleteEntry, setEntry } from "../../actions/fileSystem";
+import { addRecycleEntry, setRecycleEntry, deleteRecycleEntry } from "../../actions/recycleBin";
+import { setEntry } from "../../actions/fileSystem";
+
 
 import RecycleIcon from "../../components/Icon/RecycleIcon";
 import Add from "../../components/Add";
@@ -79,10 +81,10 @@ const RecycleCard = (props) => {
 
 
   useEffect(() => {
-      console.log(props.fileSystem[md5("/SarvvidBox" + FOLDER)]);
+      console.log(props.recycleBin[md5("/SarvvidBox" + FOLDER)]);
       console.log("Entry...", props.entry)
       if (
-        !Object.keys(props.fileSystem).includes(
+        !Object.keys(props.recycleBin).includes(
           md5(props.location.pathname + FOLDER)
         )
       ) {
@@ -92,6 +94,8 @@ const RecycleCard = (props) => {
 
      
   }, [entryState, props.entry])
+
+  console.log("recyclebin Card props...", props)
 
   // setTimeout(() => {
   //   window.location.reload()
@@ -126,6 +130,7 @@ const RecycleCard = (props) => {
                   props.deleteEntry(md5(entry.path + entry.type));
                 }}
                 setEntry={(val) => props.setEntry(val)}
+                setRecycleEntry={(val) => props.setRecycleEntry(val)}
               />
             ))}
           </div> : 
@@ -149,18 +154,18 @@ const RecycleCard = (props) => {
 const mapStateToProps = (state, ownProps) => {
   console.log("ownprops...",ownProps.match.url);
   const path = ownProps.match.url;
-  console.log("mapstatetoprops...",state.fileSystem);
+  console.log("mapstatetoprops...",state.recycleBin);
 
   return {
-    entry: state.fileSystem[md5(path + FOLDER)]
-      ? state.fileSystem[md5(path + FOLDER)].children.map(
-          (childrenID) => state.fileSystem[childrenID]
+    entry: state.recycleBin[md5(path + FOLDER)]
+      ? state.recycleBin[md5(path + FOLDER)].children.map(
+          (childrenID) => state.recycleBin[childrenID]
         )
       : [],
-    fileSystem: state.fileSystem,
+    recycleBin: state.recycleBin,
   };
 };
 
-export default connect(mapStateToProps, { addEntry, deleteEntry, setEntry })(
+export default connect(mapStateToProps, { addRecycleEntry, deleteRecycleEntry, setRecycleEntry, setEntry })(
   RecycleCard
 );
