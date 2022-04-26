@@ -111,28 +111,28 @@ const RightPane = (props) => {
   const [totalStorage, setTotalStorage] = useState(0);
   const [usedStorageGb, setUsedStorageGb] = useState(0);
 
+  const {imageCount, audioCount, videoCount, documentCount, othersCount, imageSize, audioSize, videoSize, documentSize, othersSize} = useSelector((state) => state.storage)
+  const storageData = getStorage()
+
+  
+
   useEffect(() => {
     setUsedStorage(
-      localStorage.getItem("used_bytes")/1000000000
+      storageData.used_gb
     );
 
     setUnusedStorage(
-      (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))
+      storageData.rem_gb
     );
 
     setRemainingGB(
-      (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))/1000000000
+      storageData.rem_gb
     );
 
     setTotalStorage(parseFloat(localStorage.getItem("total_bytes")) / 1000000000);
 
-    setUsedStorageGb(totalStorage - remainingGB);
+    setUsedStorageGb(storageData.used_gb);
 
-    console.log("usedstorage...", usedStorage);
-    console.log("unusedstorage...", unusedStorage);
-    console.log("remainingGB...", remainingGB.toFixed(2));
-    console.log("totalStorage...", totalStorage);
-    console.log("usedStorageGb...", usedStorageGb.toFixed(2));
   });
 
   // useEffect(() => {
@@ -302,23 +302,23 @@ const RightPane = (props) => {
         console.log("Payment success...", result);
 
         
-        setStorage(result.data.used_bytes, result.data.updatedStorage)
+        const storageData = setStorage(result.data.used_bytes, result.data.updatedStorage)
         
         setUsedStorage(
-          localStorage.getItem("used_bytes")/1000000000
+          storageData.used_gb
         );
     
         setUnusedStorage(
-          (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))
+          storageData.rem_gb
         );
     
         setRemainingGB(
-          (localStorage.getItem("total_bytes") - localStorage.getItem("used_bytes"))/1000000000
+          storageData.rem_gb
         );
     
         setTotalStorage(parseFloat(localStorage.getItem("total_bytes")) / 1000000000);
     
-        setUsedStorageGb(totalStorage - remainingGB);
+        setUsedStorageGb(storageData.used_gb);
         
 
         alert(result.data.message);
@@ -421,11 +421,11 @@ const RightPane = (props) => {
               </div>
               <div className="file_details" style={{marginLeft:"1.4rem"}} >
                 <h4>Documents</h4>
-                <p>214 files</p>
+                <p>{documentCount}</p>
               </div>
             </div>
             <div >
-              <p className="file_detail_size" >2.4GB</p>
+              <p className="file_detail_size" >{documentSize}</p>
             </div>
           </div>
           <div className="file_detail">
@@ -435,11 +435,11 @@ const RightPane = (props) => {
               </div>
               <div className="file_details">
                 <h4>Images</h4>
-                <p>526 files</p>
+                <p>{imageCount}</p>
               </div>
             </div>
             <div >
-              <p className="file_detail_size" >5GB</p>
+              <p className="file_detail_size" >{imageSize}</p>
             </div>
           </div>          
           <div className="file_detail">
@@ -449,11 +449,11 @@ const RightPane = (props) => {
               </div>
               <div className="file_details">
                 <h4>Other files</h4>
-                <p>65 files</p>
+                <p>{othersCount}</p>
               </div>
             </div>
             <div >
-              <p className="file_detail_size" >4GB</p>
+              <p className="file_detail_size" >{othersSize}</p>
             </div>
           </div>
       </div>

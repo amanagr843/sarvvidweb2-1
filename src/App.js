@@ -56,6 +56,7 @@ const store = createStore(
       Object.keys(localStorage.getItem("recycleBin")).length > 0
         ? JSON.parse(localStorage.getItem("recycleBin"))
         : generatedummyFileSystem(),
+    
   },
   
   composeWithDevTools()

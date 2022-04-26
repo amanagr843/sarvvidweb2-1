@@ -561,7 +561,7 @@ const RecycleIcon = (props) => {
     var newEntry = {};
         newEntry.parentPath = "/Restored";
         newEntry.name = props.entry.name;
-
+        newEntry.mimetype = props.entry.mimetype;
         newEntry.type = FILE;
         newEntry.path =
           newEntry.parentPath === "/"

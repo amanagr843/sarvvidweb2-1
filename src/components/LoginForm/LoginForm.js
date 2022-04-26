@@ -310,7 +310,7 @@ function LoginForm(props) {
         localStorage.setItem("user_name", resp.data.username);
         localStorage.setItem("user_number", resp.data.phone);
         localStorage.setItem("filled_per", resp.data.storageFilled);
-        localStorage.setItem("remaining_per", resp.data.storageRemain);
+        // localStorage.setItem("remaining_per", resp.data.storageRemain);
 
         const temp = resp.data.data;
 

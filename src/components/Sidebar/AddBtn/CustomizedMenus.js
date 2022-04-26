@@ -26,6 +26,8 @@ import "./styles.css"
 import {useTheme} from "../../../contexts/themeContext"
 import getEnc from "../../../utils/enc";
 import { getStorage, setStorage } from "../../../utils/storageHandler"
+import { useDispatch } from "react-redux"
+import { updateStorageInfo } from "../../../actions/storage"
 import { virgilCrypto } from "react-native-virgil-crypto"
 
 const StyledMenu = withStyles({
@@ -60,10 +62,11 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export default function CustomizedMenus(props) {
+function CustomizedMenus(props) {
 
   const darkTheme = useTheme();
-  const enc = getEnc()
+  const enc = getEnc();
+  const dispatch  = useDispatch();
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     getFilesFromEvent: (event) => myCustomFileGetter(event),
@@ -186,10 +189,26 @@ export default function CustomizedMenus(props) {
     })
       .then((response) => {
         if (response.data.newtoken) {
+          console.log("upload resp...", response)
           console.log("New auth token...",response.data.newtoken);
           localStorage.setItem("authtoken", response.data.newtoken);
-          console.log("upload resp...", response)
           const storageData = setStorage(response.data.used_bytes, response.data.current_storage)
+          const respData = response.data;
+          const storageInfo = {
+            imageCount: respData.images_count,
+            audioCount: respData.audios_count,
+            videoCount: respData.videos_count,
+            documentCount: respData.docs_count,
+            othersCount: respData.others_count,
+            imageSize: respData.images_size,
+            audioSize: respData.audios_size,
+            videoSize: respData.videos_size,
+            documentSize: respData.docs_size,
+            othersSize: respData.others_size
+          }
+
+          dispatch(updateStorageInfo(storageInfo))
+
           setDisableUploadButton(false);
           const values = {
             type: FILE,
@@ -207,7 +226,8 @@ export default function CustomizedMenus(props) {
           var newEntry = {};
           newEntry.parentPath = props.currentpath;
           newEntry.name = document[0].name;
-
+          newEntry.mimetype = document[0].type;
+          newEntry.date = new Date().toLocaleString();
           newEntry.type = FILE;
           newEntry.path =
             newEntry.parentPath === "/"
@@ -236,7 +256,7 @@ export default function CustomizedMenus(props) {
           if (newEntry.type === FOLDER) {
             newEntry.children = [];
           }
-          newEntry.creatorName = "User";
+          newEntry.creatorName = localStorage.getItem("IMEI");
           newEntry.size = document[0].size;
           newEntry.parentID = pid;
           data[id] = newEntry;
@@ -565,8 +585,8 @@ export default function CustomizedMenus(props) {
             if ("code" in response.data && response.data.code === 200) {
               console.log("Success======>>", response.data.success);
               console.log("upload response...", response.data)
-              localStorage.setItem("filled_per", response.data.storageFilled)
-              localStorage.setItem("remaining_per", response.data.storageRemain)
+              // localStorage.setItem("filled_per", response.data.storageFilled)
+              // localStorage.setItem("remaining_per", response.data.storageRemain)
             } else {
               console.log(response.data.notsecure);
             }
@@ -743,3 +763,6 @@ async function myCustomFileGetter(event) {
   }
   return files;
 }
+
+
+export default CustomizedMenus

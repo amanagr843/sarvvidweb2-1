@@ -21,6 +21,9 @@ export const getStorage = () => {
         used_gb
     }
 
+    localStorage.setItem("remaining_per", rem_per)
+    localStorage.setItem("filled_per", filled_per)
+
     console.log("storage data...", data)
 
     return data;

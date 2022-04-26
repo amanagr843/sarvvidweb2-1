@@ -462,6 +462,7 @@ const Icon = (props) => {
           newEntry.name = props.entry.name;
 
           newEntry.type = FILE;
+          newEntry.mimetype = props.entry.mimetype;
           newEntry.path =
             newEntry.parentPath === "/"
               ? `${newEntry.parentPath}${newEntry.name}`

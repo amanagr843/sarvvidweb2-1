@@ -24,6 +24,7 @@ import gridDarkIcon from "../assets/img/griddark.svg";
 import RainbowShadow from "../assets/img/rainbow_shadow.png";
 import AccountIcon from "../assets/img/sample_userimg.png";
 import { Height } from "@material-ui/icons";
+import { getStorage } from "../utils/storageHandler"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +44,8 @@ const SettingsViewFiles = () => {
   let userName = localStorage.getItem("user_name");
   let user_number = localStorage.getItem("user_number");
 
+  const storageData = getStorage()
+
   const [usedStorage, setUsedStorage] = useState(0);
   const [unusedStorage, setUnusedStorage] = useState(0);
   const [remainingGB, setRemainingGB] = useState(0);
@@ -50,24 +53,15 @@ const SettingsViewFiles = () => {
   const [usedStorageGb, setUsedStorageGb] = useState(0);
 
   useEffect(() => {
-    setUsedStorage(
-      parseFloat(localStorage.getItem("filled_per") / 100) *
-        (parseFloat(localStorage.getItem("total")) / 1000000000)
-    );
+    setUsedStorage( storageData.used_gb );
 
-    setUnusedStorage(
-      parseFloat(localStorage.getItem("remaining_per") / 100) *
-        (parseFloat(localStorage.getItem("total")) / 1000000000)
-    );
+    setUnusedStorage( storageData.rem_gb );
 
-    setRemainingGB(
-      (parseFloat(localStorage.getItem("total")) / 1000000000) *
-        parseFloat(localStorage.getItem("remaining_per") / 100)
-    );
+    setRemainingGB( storageData.rem_gb );
 
-    setTotalStorage(parseFloat(localStorage.getItem("total")) / 1000000000);
+    setTotalStorage(parseFloat(localStorage.getItem("total_bytes")) / 1000000000);
 
-    setUsedStorageGb(totalStorage - remainingGB);
+    setUsedStorageGb(storageData.used_gb);
 
     // console.log("usedstorage...", usedStorage);
     // console.log("unusedstorage...", unusedStorage);
