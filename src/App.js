@@ -35,7 +35,8 @@ import RightPane from "./components/RightPane/RightPane";
 import generatedummyFileSystem from "./utils/dummyFileSystem";
 import Axios from "axios";
 import CheckOnline from "./components/CheckOnline/CheckOnline";
-
+import { useDispatch } from "react-redux";
+import { updateAllDataInfo } from "./actions/allData";
 import {ThemeProvider, useTheme} from "./contexts/themeContext"
 
 const useStyles = makeStyles(styles);
@@ -76,7 +77,7 @@ function App() {
   const [online, setOnline] = useState(true);
   const [currentView, setCurrentView] = useState("home");
   const darkTheme = useTheme()
-
+  
   function handleViewChange(viewName) {
     setCurrentView(viewName);
   }
@@ -123,7 +124,8 @@ function App() {
       }
     )
       .then((res) => {
-        console.log(res);
+        console.log( "getData resp...", res);
+        
         seta(
           ((res.data.current_storage * res.data.filled_per) / 100).toFixed(2)
         );

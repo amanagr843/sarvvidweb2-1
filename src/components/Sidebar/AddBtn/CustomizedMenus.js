@@ -121,6 +121,27 @@ function CustomizedMenus(props) {
     // fileName: {name:fileName, progress: 0, totalprogress: 0 },
   });
 
+  const getMimeType = (mimetype) => {
+    if(mimetype.includes("image")){
+      return "image" 
+    }
+    else if(mimetype.includes("video")){
+      return "video"
+    }
+    else if(mimetype.includes("audio")){
+      return "audio"
+    }
+    else if(mimetype.includes("text")){
+      return "text"
+    }
+    else if(mimetype.includes("application")){
+      return "application"
+    }
+    else{
+      return mimetype
+    }
+  }
+
   const onFileUpload = () => {
     setDisableUploadButton(true);
     console.log("Uploading File===============>>>>>>");
@@ -226,7 +247,8 @@ function CustomizedMenus(props) {
           var newEntry = {};
           newEntry.parentPath = props.currentpath;
           newEntry.name = document[0].name;
-          newEntry.mimetype = document[0].type;
+          newEntry.mimetype = getMimeType(document[0].type);
+          console.log("mime type...", newEntry.mimetype )
           newEntry.date = new Date().toLocaleString();
           newEntry.type = FILE;
           newEntry.path =

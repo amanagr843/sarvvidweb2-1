@@ -1,5 +1,5 @@
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./MiddlePane.css";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +10,10 @@ import SearchBar from '../components/SearchBar';
 import {useTheme, useThemeUpdate, useMenuToggle} from "../contexts/themeContext"
 
 // New
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { updateAllDataInfo } from "../actions/allData";
+import { updateStorageInfo } from "../actions/storage";
 import Loader from "../components/Loader/Loader";
 import moonIcon from '../assets/img/moon.svg'
 import sunIcon from "../assets/img/sun.svg"
@@ -38,8 +42,52 @@ const ViewFiles = (props) => {
   const toggleMenu = useMenuToggle()
   const classes = useStyles();
   const [sideDrawerToggle, setSideDrawerToggle] = useState(true);
+  const dispatch = useDispatch()
 
   console.log("viewfiles props...", props)
+
+  useEffect(() => {
+    axios(
+      `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem(
+        "ping"
+      )}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
+          "Content-Type": "application/json",
+          Authtoken: localStorage.getItem("authtoken"),
+        },
+        data: JSON.stringify({
+          IMEI: localStorage.getItem("IMEI"),
+        }),
+      }
+    ).then(resp => {
+      console.log("Get data resp...", resp)
+
+      const respData = resp.data.storage_info
+
+      const storageData = {
+        
+          imageCount: respData.images_count,
+          audioCount: respData.audios_count,
+          videoCount: respData.videos_count,
+          documentCount: respData.docs_count,
+          othersCount: respData.others_count,
+          imageSize: respData.images_size,
+          audioSize: respData.audios_size,
+          videoSize: respData.videos_size,
+          documentSize: respData.docs_size,
+          othersSize: respData.others_size
+        
+      }
+
+     dispatch(updateStorageInfo(storageData))
+
+
+
+    })
+  })
 
 
 

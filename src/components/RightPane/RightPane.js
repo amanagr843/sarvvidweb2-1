@@ -346,6 +346,12 @@ const RightPane = (props) => {
 
   }
 
+  const getSize = (fileSize) => {
+    if(fileSize < 1000000) return `${(fileSize/1000).toFixed(2)} kb`
+    else if(fileSize < 1000000000) return  `${(fileSize/1000000).toFixed(2)} mb`
+    else return `${(fileSize/1000000000).toFixed(2)} gb`
+  }
+
   return (
     <div
       className="rightPane"
@@ -396,7 +402,7 @@ const RightPane = (props) => {
           className="storage_total"
           style={{ color: `${darkTheme ? "#ccc" : "#121212"}` }}
         >
-          {isNaN(props.b) ? "NaN" : remainingGB.toFixed(2) + " GB"}
+          {remainingGB.toFixed(2) + " GB"}
         </p>
         <p
           className="storage_detail_desc"
@@ -425,7 +431,7 @@ const RightPane = (props) => {
               </div>
             </div>
             <div >
-              <p className="file_detail_size" >{documentSize}</p>
+              <p className="file_detail_size" >{getSize(documentSize)}</p>
             </div>
           </div>
           <div className="file_detail">
@@ -439,7 +445,7 @@ const RightPane = (props) => {
               </div>
             </div>
             <div >
-              <p className="file_detail_size" >{imageSize}</p>
+              <p className="file_detail_size" >{getSize(imageSize)}</p>
             </div>
           </div>          
           <div className="file_detail">
@@ -453,7 +459,7 @@ const RightPane = (props) => {
               </div>
             </div>
             <div >
-              <p className="file_detail_size" >{othersSize}</p>
+              <p className="file_detail_size" >{getSize(othersSize)}</p>
             </div>
           </div>
       </div>

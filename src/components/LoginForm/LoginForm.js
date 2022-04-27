@@ -18,6 +18,8 @@ import qrCodeIcon from "../../assets/img/qr_icon.svg";
 import { motion, useAnimation } from "framer-motion";
 
 // NEW ONES
+import { useDispatch } from "react-redux"
+import { updateAllDataInfo } from "../../actions/allData";
 import { getStorage, setStorage } from "../../utils/storageHandler"
 import { v4 as uuid } from "uuid";
 import { sha256 } from "js-sha256";
@@ -46,6 +48,9 @@ function LoginForm(props) {
   const [err, showerr] = useState(false);
   const [aerr, showautherr] = useState(false);
   const [dis, setdis] = useState(false);
+
+  const dispatch = useDispatch()
+
   // const [QR, setQR] = useState(false);
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -462,6 +467,9 @@ function LoginForm(props) {
 
       if (resp.status === 200) {
         console.log("Logged in successfully");
+
+        dispatch(updateAllDataInfo(resp.data))
+
         console.log("file sytem...", resp.data.filesys);
 
 
