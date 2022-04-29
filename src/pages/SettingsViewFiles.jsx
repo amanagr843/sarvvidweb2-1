@@ -116,7 +116,7 @@ const SettingsViewFiles = () => {
                     color: `${darkTheme ? "#aaa" : "#acacac"}`,
                   }}
                 >
-                  Not you? Click here to change your account{" "}
+                  {/* Not you? Click here to change your account{" "} */}
                 </h6>
               </div>
               <div className="user_avatar">
@@ -142,7 +142,7 @@ const SettingsViewFiles = () => {
             <div className="user_info_settings">
               <div className="user_details_settings">
                 <h3 style={{ color: `${darkTheme ? "#ccc" : "#11243d"}` }}>
-                  SarvvidPro™
+                  SarvvidPro
                 </h3>
                 <h6
                   style={{
@@ -150,7 +150,7 @@ const SettingsViewFiles = () => {
                     color: `${darkTheme ? "#aaa" : "#acacac"}`,
                   }}
                 >
-                  Click here to upgrade your storage{" "}
+                  {/* Click here to upgrade your storage{" "} */}
                 </h6>
               </div>
               <div className="user_avatar">
@@ -207,7 +207,7 @@ const SettingsViewFiles = () => {
         className="footer_msg"
         style={{ marginTop: "2rem", color: "#acacac" }}
       >
-        <p>© Copyright SarvvidWeb 2022</p>
+        <p>© Copyright Sarvvid™ 2022</p>
       </div>
     </div>
   );

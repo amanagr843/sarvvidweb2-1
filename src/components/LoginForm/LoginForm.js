@@ -220,6 +220,7 @@ function LoginForm(props) {
   const [splashOpened, setSplashOpened] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("")
   const [userEmail, setUserEmail] = useState("");
   const [userPass, setUserPass] = useState("");
   const [userPh, setUserPh] = useState("");
@@ -245,15 +246,15 @@ function LoginForm(props) {
       const resp = await axios({
         method: "post",
         url: "https://api.sarvvid-ai.com/forgetpassword",
-        headers: { authtoken: enc },
+        headers: { verificationtoken: enc },
         data: {
           email: userEmail,
         },
       });
 
       console.log("forgot pass resp...", resp);
-
-      
+      setForgotMessage(resp.data.message)
+      setCurrentScreen("forgotpasssuccess")
 
       setModalOpen(false);
     } catch (error) {
@@ -279,12 +280,12 @@ function LoginForm(props) {
     try {
       console.log("register started...");
 
-      console.log("user Pass...", userPass);
-      console.log("user Mail...", userEmail);
-      console.log("user Phone...", userPh);
+      // console.log("user Pass...", userPass);
+      // console.log("user Mail...", userEmail);
+      // console.log("user Phone...", userPh);
 
       const userId = sha256(userEmail).slice(0, 24);
-      console.log("user ID...", userId);
+      // console.log("user ID...", userId);
 
       const resp = await axios({
         method: "post",
@@ -448,8 +449,8 @@ function LoginForm(props) {
     try {
       console.log("login started...");
 
-      console.log("user Pass...", userPass);
-      console.log("user Mail...", userEmail);
+      // console.log("user Pass...", userPass);
+      // console.log("user Mail...", userEmail);
 
       console.log("enc key...", enc)
 
@@ -910,6 +911,43 @@ function LoginForm(props) {
                     }}
                   >
                     Try Again
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className={`form-container ${
+                !(currentScreen === "forgotpasssuccess") && "hidden"
+              } loginerror-container`}
+            >
+              <div className="form">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <h1>Verify</h1>
+                </div>
+                
+                <p className={"forgotpassheader"}>
+                {forgotMessage}
+                </p>
+
+                <div
+                  className={"center loginbuttons"}
+                  style={{ textAlign: "center" }}
+                >
+                  <button
+                    type="Submit"
+                    onClick={(e) => {
+                      setCurrentScreen("signin");
+                      e.preventDefault();
+                    }}
+                  >
+                    Sign in
                   </button>
                 </div>
               </div>
