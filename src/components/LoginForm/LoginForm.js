@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import axios from "axios";
 import "./LoginForm.css";
 import { API_BASE_URL, ACCESS_TOKEN_NAME } from "../../constants/apiConstants";
@@ -18,17 +18,21 @@ import qrCodeIcon from "../../assets/img/qr_icon.svg";
 import { motion, useAnimation } from "framer-motion";
 
 // NEW ONES
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
 import { updateAllDataInfo } from "../../actions/allData";
-import { getStorage, setStorage } from "../../utils/storageHandler"
+import { getStorage, setStorage } from "../../utils/storageHandler";
 import { v4 as uuid } from "uuid";
 import { sha256 } from "js-sha256";
 import { setEntry } from "../../actions/fileSystem";
 import { Modal } from "@material-ui/core";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
+import countryList from "react-select-country-list";
+import Select from "react-select";
+import { useAlert } from "react-alert";
 
 const crypto = require("crypto");
 const platform = require("platform");
+let countriesInfo = require("countries-information");
 const browser = platform.name + platform.version;
 
 const QRvalue = JSON.stringify({
@@ -48,8 +52,23 @@ function LoginForm(props) {
   const [err, showerr] = useState(false);
   const [aerr, showautherr] = useState(false);
   const [dis, setdis] = useState(false);
+  const [countryValue, setCountryValue] = useState("");
+  const [countryCode, setCountryCode] = useState("");
 
-  const dispatch = useDispatch()
+  const countryOptions = useMemo(() => countryList().getData(), []);
+
+  const countryChangeHandler = (value) => {
+    setCountryValue(value);
+    console.log(
+      countriesInfo.getCountryInfoByCode(value.value).countryCallingCodes[0]
+    );
+    setCountryCode(
+      countriesInfo.getCountryInfoByCode(value.value).countryCallingCodes[0]
+    );
+  };
+
+  const dispatch = useDispatch();
+  const alert = useAlert();
 
   // const [QR, setQR] = useState(false);
   const handleChange = (e) => {
@@ -60,11 +79,9 @@ function LoginForm(props) {
     }));
   };
 
-
   // const handleQRCode = () => {
   //   setQR(!QR);
   // };
-
 
   const handleSubmitClick = (e) => {
     e.preventDefault();
@@ -94,7 +111,7 @@ function LoginForm(props) {
             Accept: "application/json, text/plain, */*",
             Authtoken: state.authtoken, // It can be used to overcome cors errors
             "Content-Type": "application/json",
-            verificationToken: enc
+            verificationToken: enc,
           }
         )
         .then(function (response) {
@@ -152,12 +169,10 @@ function LoginForm(props) {
     }
   };
 
-
   const redirectToHome = () => {
     props.updateTitle("Home");
     props.history.push("/");
   };
-
 
   const redirectToRegister = () => {
     props.history.push("/register");
@@ -206,7 +221,6 @@ function LoginForm(props) {
     Z: "b7c0",
   };
 
-
   let key =
     "541DBC699AD251F68C3C55A86C147CFD7C6D2E90BE9E170507B153560C8A65AAAFB2BB839B16F9DED96A41FE15406FEC0116BFDD7BCF7F27B827F2E047E8196DDF03E3A7C6364FD6626041CB8B8133051D969DC67E7ED6EF0944DE6A0BC96443225EE15C60AC49C17EEFA5AF3E54FECB19FD1573BF94C9D5198DB816FC814EF3";
   let enc = "";
@@ -220,22 +234,57 @@ function LoginForm(props) {
   const [splashOpened, setSplashOpened] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [forgotMessage, setForgotMessage] = useState("")
+  const [forgotMessage, setForgotMessage] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPass, setUserPass] = useState("");
-  const [userPh, setUserPh] = useState("");
+  const [userPh, setUserPh] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [userCPass, setUserCPass] = useState("");
+  const [validPhone, setValidPhone] = useState(false);
+  const [validPass, setValidPass] = useState(false)
 
   // Functions
 
-  // clear credentials
-  const clearCredentials = () => {
-    setUserEmail("")
-    setUserPass("")
-    setUserCPass("")
-    setUserPh("")
+  const validatePhone = (value) => {
+    setUserPh(value);
+
+    const phRegx = /^[0-9]{10}$/;
+
+    if (value.match(phRegx)) {
+      setValidPhone(true);
+    } else {
+      setValidPhone(false);
+    }
+  };
+
+  const validatePass = (value) => {
+
+    const passRegx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+
+    if (value.match(passRegx)) {
+      setValidPass(true)
+    } else {
+      setValidPass(false)
+    }
+     
   }
+
+  // clear credentials
+
+  const clearCredentials = () => {
+    setUserEmail("");
+    setUserPass("");
+    setUserCPass("");
+    setUserPh("");
+  };
+
+  // check empty inputs
+
+  const checkEmpty = () => {
+    return (
+      userPh != "" && userPass != "" && userEmail != "" && countryCode != ""
+    );
+  };
 
   // forgot password
 
@@ -253,23 +302,23 @@ function LoginForm(props) {
       });
 
       console.log("forgot pass resp...", resp);
-      setForgotMessage(resp.data.message)
-      setCurrentScreen("forgotpasssuccess")
+      setForgotMessage(resp.data.message);
+      setCurrentScreen("forgotpasssuccess");
 
       setModalOpen(false);
     } catch (error) {
-      console.log("forgotpass error...", error)
-      setCurrentScreen("loginerror")
-      if(error.response){
-        setErrorMsg(error.response.data.message)
+      console.log("forgotpass error...", error);
+      setCurrentScreen("loginerror");
+      if (error.response) {
+        setErrorMsg(error.response.data.message);
       } else {
-        setErrorMsg("We are having some network issues, try again after sometime")
+        setErrorMsg(
+          "We are having some network issues, try again after sometime"
+        );
       }
-
     }
 
     clearCredentials();
-
   };
 
   // register through sarvvid-web
@@ -277,168 +326,183 @@ function LoginForm(props) {
   const registerWeb = async (e) => {
     e.preventDefault();
 
-    try {
-      console.log("register started...");
+    if (checkEmpty()) {
+      if (validPhone) {
+        try {
+          console.log("register started...");
 
-      // console.log("user Pass...", userPass);
-      // console.log("user Mail...", userEmail);
-      // console.log("user Phone...", userPh);
+          // console.log("user Pass...", userPass);
+          // console.log("user Mail...", userEmail);
+          // console.log("user Phone...", userPh);
+          console.log("user code...", countryCode);
 
-      const userId = sha256(userEmail).slice(0, 24);
-      // console.log("user ID...", userId);
+          const userId = sha256(userEmail).slice(0, 24);
+          // console.log("user ID...", userId);
 
-      const resp = await axios({
-        method: "post",
-        url: `https://api.sarvvid-ai.com/webregister`,
-        headers: { verificationToken: enc },
-        data: {
-          email: userEmail,
-          password: userPass,
-          phone: userPh,
-          uniqueID: userId,
-        },
-      });
-
-      const msresp = await axios({
-        method: "get",
-        url: `https://api.sarvvid-ai.com/ms?ms=${130}&IMEI=${userId}`,
-      });
-
-      console.log("signup resp...", resp);
-
-      if (resp.data.status === 200) {
-        console.log("Signed up successfully");
-        console.log("file sytem...", resp.data.filesys);
-
-        localStorage.setItem("IMEI", resp.data.IMEI);
-        localStorage.setItem("authtoken", resp.data.authtoken);
-        localStorage.setItem("ping", 130);
-        localStorage.setItem("user_name", resp.data.username);
-        localStorage.setItem("user_number", resp.data.phone);
-        localStorage.setItem("filled_per", resp.data.storageFilled);
-        // localStorage.setItem("remaining_per", resp.data.storageRemain);
-
-        const temp = resp.data.data;
-
-        let new_fileSystem = resp.data.filesys;
-        localStorage.setItem("fileSystem", JSON.stringify(new_fileSystem));
-        localStorage.setItem("recycleBin", JSON.stringify(resp.data.recycleBin))
-        var new_data = JSON.parse(localStorage.getItem("fileSystem"));
-        var newEntry = {};
-        newEntry.name = "SarvvidBox";
-        newEntry.type = "__folder__";
-        newEntry.creatorName = "";
-        newEntry.size = 0;
-        newEntry.path = "/SarvvidBox";
-        newEntry.parentPath = "/";
-        newEntry.children = [];
-        newEntry.date = "";
-        newEntry.parentID = md5("/" + "__folder__");
-        const id_1 = md5("/SarvvidBox" + "__folder__");
-        new_data[id_1] = newEntry;
-        let i = 0;
-        for (i = 0; i < temp.length; i++) {
-          var newEntry_1 = {};
-          newEntry_1.name = temp[i];
-          newEntry_1.type = "__file__";
-          newEntry_1.creatorName = "";
-          newEntry_1.size = 0;
-          newEntry_1.path = "/SarvvidBox/" + temp[i];
-          newEntry_1.parentPath = "/SarvvidBox";
-          newEntry_1.parentID = md5("/SarvvidBox" + "__folder__");
-          newEntry_1.date = "";
-          new_data[md5("/SarvvidBox/" + temp[i] + "__file__")] = newEntry_1;
-          new_data[md5("/SarvvidBox" + "__folder__")].children.push(
-            md5("/SarvvidBox/" + temp[i] + "__file__")
-          );
-        }
-        console.log("new data...", new_data);
-        if (new_fileSystem.length > 2) {
-          localStorage.setItem("fileSystem", new_fileSystem);
-          // setEntry(JSON.parse(new_fileSystem));
-        } else {
-          localStorage.setItem("fileSystem", JSON.stringify(new_data));
-          // setEntry(new_data);
-        }
-
-        axios(
-          `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem(
-            "ping"
-          )}`,
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
-              "Content-Type": "application/json",
-              Authtoken: localStorage.getItem("authtoken"),
-              verificationToken: enc
+          const resp = await axios({
+            method: "post",
+            url: `https://api.sarvvid-ai.com/webregister`,
+            headers: { verificationToken: enc },
+            data: {
+              email: userEmail,
+              password: userPass,
+              phone: userPh,
+              uniqueID: userId,
+              countryCode: countryCode,
             },
-            data: JSON.stringify({
-              IMEI: localStorage.getItem("IMEI"),
-            }),
-          }
-        )
-          .then((res) => {
-            console.log("getdata...", res);
-            props.setA(
-              ((res.data.current_storage * res.data.filled_per) / 100).toFixed(
-                2
-              )
-            );
-            props.setB(res.data.current_storage);
-            localStorage.setItem(
-              "used",
-              isNaN(
-                (
-                  (res.data.current_storage * res.data.filled_per) /
-                  100
-                ).toFixed(2)
-              )
-                ? 0
-                : (
-                    (res.data.current_storage * res.data.filled_per) /
-                    100
-                  ).toFixed(9) *
-                    1000 *
-                    1000 *
-                    1000
-            );
-            localStorage.setItem(
-              "total",
-              isNaN(res.data.current_storage)
-                ? 20 * 1000 * 1000 * 1000
-                : res.data.current_storage * 1000 * 1000 * 1000
-            );
-          })
-          .catch(() => {
-            if (localStorage.getItem("used") == null)
-              localStorage.setItem("used", 0);
-            if (localStorage.getItem("total") == null)
-              localStorage.setItem("total", 20 * 1000 * 1000 * 1000);
           });
 
-        console.log("HI I AM IN");
-        setState((prevState) => ({
-          ...prevState,
-          successMessage: "Register successful. Redirecting to home page..",
-        }));
-        localStorage.setItem(ACCESS_TOKEN_NAME, 1);
+          const msresp = await axios({
+            method: "get",
+            url: `https://api.sarvvid-ai.com/ms?ms=${130}&IMEI=${userId}`,
+          });
 
-        setCurrentScreen("regsuccess");
-      }
-      
-    } catch (error) {
-      console.log("signup error...", error);
-      setCurrentScreen("loginerror")
-      if(error.response){
-        setErrorMsg(error.response.data.message)
+          console.log("signup resp...", resp);
+
+          if (resp.data.status === 200) {
+            console.log("Signed up successfully");
+            console.log("file sytem...", resp.data.filesys);
+
+            localStorage.setItem("IMEI", resp.data.IMEI);
+            localStorage.setItem("authtoken", resp.data.authtoken);
+            localStorage.setItem("ping", 130);
+            localStorage.setItem("user_name", resp.data.username);
+            localStorage.setItem("user_number", resp.data.phone);
+            localStorage.setItem("filled_per", resp.data.storageFilled);
+            // localStorage.setItem("remaining_per", resp.data.storageRemain);
+
+            const temp = resp.data.data;
+
+            let new_fileSystem = resp.data.filesys;
+            localStorage.setItem("fileSystem", JSON.stringify(new_fileSystem));
+            localStorage.setItem(
+              "recycleBin",
+              JSON.stringify(resp.data.recycleBin)
+            );
+            var new_data = JSON.parse(localStorage.getItem("fileSystem"));
+            var newEntry = {};
+            newEntry.name = "SarvvidBox";
+            newEntry.type = "__folder__";
+            newEntry.creatorName = "";
+            newEntry.size = 0;
+            newEntry.path = "/SarvvidBox";
+            newEntry.parentPath = "/";
+            newEntry.children = [];
+            newEntry.date = "";
+            newEntry.parentID = md5("/" + "__folder__");
+            const id_1 = md5("/SarvvidBox" + "__folder__");
+            new_data[id_1] = newEntry;
+            let i = 0;
+            for (i = 0; i < temp.length; i++) {
+              var newEntry_1 = {};
+              newEntry_1.name = temp[i];
+              newEntry_1.type = "__file__";
+              newEntry_1.creatorName = "";
+              newEntry_1.size = 0;
+              newEntry_1.path = "/SarvvidBox/" + temp[i];
+              newEntry_1.parentPath = "/SarvvidBox";
+              newEntry_1.parentID = md5("/SarvvidBox" + "__folder__");
+              newEntry_1.date = "";
+              new_data[md5("/SarvvidBox/" + temp[i] + "__file__")] = newEntry_1;
+              new_data[md5("/SarvvidBox" + "__folder__")].children.push(
+                md5("/SarvvidBox/" + temp[i] + "__file__")
+              );
+            }
+            console.log("new data...", new_data);
+            if (new_fileSystem.length > 2) {
+              localStorage.setItem("fileSystem", new_fileSystem);
+              // setEntry(JSON.parse(new_fileSystem));
+            } else {
+              localStorage.setItem("fileSystem", JSON.stringify(new_data));
+              // setEntry(new_data);
+            }
+
+            axios(
+              `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem(
+                "ping"
+              )}`,
+              {
+                method: "POST",
+                headers: {
+                  Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
+                  "Content-Type": "application/json",
+                  Authtoken: localStorage.getItem("authtoken"),
+                  verificationToken: enc,
+                },
+                data: JSON.stringify({
+                  IMEI: localStorage.getItem("IMEI"),
+                }),
+              }
+            )
+              .then((res) => {
+                console.log("getdata...", res);
+                props.setA(
+                  (
+                    (res.data.current_storage * res.data.filled_per) /
+                    100
+                  ).toFixed(2)
+                );
+                props.setB(res.data.current_storage);
+                localStorage.setItem(
+                  "used",
+                  isNaN(
+                    (
+                      (res.data.current_storage * res.data.filled_per) /
+                      100
+                    ).toFixed(2)
+                  )
+                    ? 0
+                    : (
+                        (res.data.current_storage * res.data.filled_per) /
+                        100
+                      ).toFixed(9) *
+                        1000 *
+                        1000 *
+                        1000
+                );
+                localStorage.setItem(
+                  "total",
+                  isNaN(res.data.current_storage)
+                    ? 20 * 1000 * 1000 * 1000
+                    : res.data.current_storage * 1000 * 1000 * 1000
+                );
+              })
+              .catch(() => {
+                if (localStorage.getItem("used") == null)
+                  localStorage.setItem("used", 0);
+                if (localStorage.getItem("total") == null)
+                  localStorage.setItem("total", 20 * 1000 * 1000 * 1000);
+              });
+
+            console.log("HI I AM IN");
+            setState((prevState) => ({
+              ...prevState,
+              successMessage: "Register successful. Redirecting to home page..",
+            }));
+            localStorage.setItem(ACCESS_TOKEN_NAME, 1);
+
+            setCurrentScreen("regsuccess");
+          }
+        } catch (error) {
+          console.log("signup error...", error);
+          setCurrentScreen("loginerror");
+          if (error.response) {
+            setErrorMsg(error.response.data.message);
+          } else {
+            setErrorMsg(
+              "We are having some network issues, try again after sometime"
+            );
+          }
+        }
       } else {
-        setErrorMsg("We are having some network issues, try again after sometime")
+        // alert("Invalid phone number");
+        alert.error("Invalid phone number");
       }
-     
+    } else {
+      alert.error("Please fill all the fields");
     }
 
-    clearCredentials()
+    clearCredentials();
   };
 
   // login through sarvvid-web
@@ -452,7 +516,7 @@ function LoginForm(props) {
       // console.log("user Pass...", userPass);
       // console.log("user Mail...", userEmail);
 
-      console.log("enc key...", enc)
+      console.log("enc key...", enc);
 
       const resp = await axios({
         method: "post",
@@ -469,10 +533,9 @@ function LoginForm(props) {
       if (resp.status === 200) {
         console.log("Logged in successfully");
 
-        dispatch(updateAllDataInfo(resp.data))
+        dispatch(updateAllDataInfo(resp.data));
 
         console.log("file sytem...", resp.data.filesys);
-
 
         localStorage.setItem("IMEI", resp.data.IMEI);
         localStorage.setItem("authtoken", resp.data.authtoken);
@@ -480,15 +543,19 @@ function LoginForm(props) {
         localStorage.setItem("user_name", resp.data.username);
         localStorage.setItem("user_number", resp.data.phone);
 
-        const storageData = setStorage(resp.data.used_bytes, resp.data.current_storage)
-
-        
+        const storageData = setStorage(
+          resp.data.used_bytes,
+          resp.data.current_storage
+        );
 
         const temp = resp.data.data;
 
         let new_fileSystem = resp.data.filesys;
         localStorage.setItem("fileSystem", JSON.stringify(new_fileSystem));
-        localStorage.setItem("recycleBin", JSON.stringify(resp.data.recycleBin))
+        localStorage.setItem(
+          "recycleBin",
+          JSON.stringify(resp.data.recycleBin)
+        );
         var new_data = JSON.parse(localStorage.getItem("fileSystem"));
         var newEntry = {};
         newEntry.name = "SarvvidBox";
@@ -537,7 +604,7 @@ function LoginForm(props) {
               Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
               "Content-Type": "application/json",
               Authtoken: localStorage.getItem("authtoken"),
-              verificationToken: enc
+              verificationToken: enc,
             },
             data: JSON.stringify({
               IMEI: localStorage.getItem("IMEI"),
@@ -600,10 +667,12 @@ function LoginForm(props) {
     } catch (error) {
       console.log("login error...", error);
       setCurrentScreen("loginerror");
-      if(error.response){
-        setErrorMsg(error.response.data.message)
+      if (error.response) {
+        setErrorMsg(error.response.data.message);
       } else {
-        setErrorMsg("We are having some network issues, try again after sometime")
+        setErrorMsg(
+          "We are having some network issues, try again after sometime"
+        );
       }
 
       // alert("Network error");
@@ -644,7 +713,7 @@ function LoginForm(props) {
     await splashControls.start("rotate");
     await splashControls.start("hidden");
     await logoControls.start("visible");
-    setSplashOpened(true); 
+    setSplashOpened(true);
     setCurrentScreen("signin");
   }
 
@@ -686,7 +755,20 @@ function LoginForm(props) {
                   <input
                     type="number"
                     value={userPh}
-                    onChange={(e) => setUserPh(e.target.value)}
+                    onChange={(e) => validatePhone(e.target.value)}
+                    style={{
+                      borderColor: `${
+                        userPh ? (validPhone ? "green" : "red") : "#FFF"
+                      }`,
+                    }}
+                  />
+                  <p>Choose country.</p>
+                  <Select
+                    options={countryOptions}
+                    value={countryValue}
+                    onChange={countryChangeHandler}
+                    placeholder="Country"
+                    className="country-select"
                   />
                   <p>Password</p>
                   <input
@@ -858,9 +940,7 @@ function LoginForm(props) {
                   <button
                     type="Submit"
                     onClick={(e) => {
-                      
                       forgotPassHandler(e);
-                     
                     }}
                   >
                     Submit
@@ -894,10 +974,8 @@ function LoginForm(props) {
                 >
                   <h1>Oops</h1>
                 </div>
-                
-                <p className={"forgotpassheader"}>
-                  {errorMsg}
-                </p>
+
+                <p className={"forgotpassheader"}>{errorMsg}</p>
 
                 <div
                   className={"center loginbuttons"}
@@ -931,10 +1009,8 @@ function LoginForm(props) {
                 >
                   <h1>Verify</h1>
                 </div>
-                
-                <p className={"forgotpassheader"}>
-                {forgotMessage}
-                </p>
+
+                <p className={"forgotpassheader"}>{forgotMessage}</p>
 
                 <div
                   className={"center loginbuttons"}
@@ -968,7 +1044,7 @@ function LoginForm(props) {
                 >
                   <h1>Registered successfully</h1>
                 </div>
-                
+
                 <p className={"forgotpassheader"}>
                   Please verify your email with the link recieved on your email.
                 </p>

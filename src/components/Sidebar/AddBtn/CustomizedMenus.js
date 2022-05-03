@@ -17,18 +17,18 @@ import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import md5 from "md5";
 
-
 // New
-import KeyboardArrowDownRoundedIcon from '@material-ui/icons/KeyboardArrowDownRounded';
-import uploadIcon from "../../../assets/img/upload.svg"
-import uploadDarkIcon from "../../../assets/img/uploaddark.svg"
-import "./styles.css"
-import {useTheme} from "../../../contexts/themeContext"
+import KeyboardArrowDownRoundedIcon from "@material-ui/icons/KeyboardArrowDownRounded";
+import uploadIcon from "../../../assets/img/upload.svg";
+import uploadDarkIcon from "../../../assets/img/uploaddark.svg";
+import "./styles.css";
+import { useTheme } from "../../../contexts/themeContext";
 import getEnc from "../../../utils/enc";
-import { getStorage, setStorage } from "../../../utils/storageHandler"
-import { useDispatch } from "react-redux"
-import { updateStorageInfo } from "../../../actions/storage"
-import { virgilCrypto } from "react-native-virgil-crypto"
+import { getStorage, setStorage } from "../../../utils/storageHandler";
+import { useDispatch } from "react-redux";
+import { updateStorageInfo } from "../../../actions/storage";
+import { virgilCrypto } from "react-native-virgil-crypto";
+import { useAlert } from "react-alert";
 
 const StyledMenu = withStyles({
   paper: {
@@ -54,7 +54,7 @@ const StyledMenuItem = withStyles((theme) => ({
   root: {
     "&:hover": {
       backgroundColor: "rgba(92, 197, 188, 0.4)",
-      transition: "all 0.5s ease"
+      transition: "all 0.5s ease",
       // "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
       //   color: theme.palette.common.white,
       // },
@@ -63,10 +63,11 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 function CustomizedMenus(props) {
-
   const darkTheme = useTheme();
   const enc = getEnc();
-  const dispatch  = useDispatch();
+  const dispatch = useDispatch();
+  const storageData = getStorage();
+  const newAlert = useAlert();
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     getFilesFromEvent: (event) => myCustomFileGetter(event),
@@ -122,28 +123,22 @@ function CustomizedMenus(props) {
   });
 
   const getMimeType = (mimetype) => {
-    if(mimetype.includes("image")){
-      return "image" 
+    if (mimetype.includes("image")) {
+      return "image";
+    } else if (mimetype.includes("video")) {
+      return "video";
+    } else if (mimetype.includes("audio")) {
+      return "audio";
+    } else if (mimetype.includes("text")) {
+      return "text";
+    } else if (mimetype.includes("application")) {
+      return "application";
+    } else {
+      return mimetype;
     }
-    else if(mimetype.includes("video")){
-      return "video"
-    }
-    else if(mimetype.includes("audio")){
-      return "audio"
-    }
-    else if(mimetype.includes("text")){
-      return "text"
-    }
-    else if(mimetype.includes("application")){
-      return "application"
-    }
-    else{
-      return mimetype
-    }
-  }
+  };
 
   const onFileUpload = () => {
-    setDisableUploadButton(true);
     console.log("Uploading File===============>>>>>>");
     const formData = new FormData();
     formData.append("IMEI", localStorage.getItem("IMEI"));
@@ -153,12 +148,18 @@ function CustomizedMenus(props) {
     //   document[0],
     //   "secret"
     // )
+    console.log("upload file data...", document[0]);
 
-    formData.append("filedata", document[0]  );
+    if (document[0].size > storageData.rem_bytes) {
+      newAlert.error("Not enough space");
+      return;
+    } else {
+      console.log("Continue downloading");
+    }
 
+    setDisableUploadButton(true);
+    formData.append("filedata", document[0]);
 
-
-    console.log("upload file data...", document[0])
     let string;
     string = {};
     string[document[0].name] = {
@@ -187,7 +188,7 @@ function CustomizedMenus(props) {
       headers: {
         "Content-type": "multipart/form-data",
         Authtoken: at,
-        verificationToken: enc
+        verificationToken: enc,
       },
       data: formData,
       onUploadProgress: function (progressEvent) {
@@ -210,10 +211,10 @@ function CustomizedMenus(props) {
     })
       .then((response) => {
         if (response.data.newtoken) {
-          console.log("upload resp...", response)
-          console.log("New auth token...",response.data.newtoken);
+          console.log("upload resp...", response);
+          console.log("New auth token...", response.data.newtoken);
           localStorage.setItem("authtoken", response.data.newtoken);
-          const storageData = setStorage(response.data.used_bytes, response.data.current_storage)
+          setStorage(response.data.used_bytes, response.data.current_storage);
           const respData = response.data;
           const storageInfo = {
             imageCount: respData.images_count,
@@ -225,10 +226,10 @@ function CustomizedMenus(props) {
             audioSize: respData.audios_size,
             videoSize: respData.videos_size,
             documentSize: respData.docs_size,
-            othersSize: respData.others_size
-          }
+            othersSize: respData.others_size,
+          };
 
-          dispatch(updateStorageInfo(storageInfo))
+          dispatch(updateStorageInfo(storageInfo));
 
           setDisableUploadButton(false);
           const values = {
@@ -241,14 +242,14 @@ function CustomizedMenus(props) {
 
           const pid = md5(props.currentpath + FOLDER);
 
-          console.log("pid...", pid, "   current path...", props)
-          console.log(data[pid])
+          console.log("pid...", pid, "   current path...", props);
+          console.log(data[pid]);
 
           var newEntry = {};
           newEntry.parentPath = props.currentpath;
           newEntry.name = document[0].name;
           newEntry.mimetype = getMimeType(document[0].type);
-          console.log("mime type...", newEntry.mimetype )
+          console.log("mime type...", newEntry.mimetype);
           newEntry.date = new Date().toLocaleString();
           newEntry.type = FILE;
           newEntry.path =
@@ -291,7 +292,7 @@ function CustomizedMenus(props) {
             headers: {
               "Content-type": "application/json",
               authtoken: localStorage.getItem("authtoken"),
-              verificationToken: enc
+              verificationToken: enc,
             },
             data: {
               IMEI: localStorage.getItem("IMEI"),
@@ -299,7 +300,7 @@ function CustomizedMenus(props) {
             },
           }).then((response) => {
             if (response.success) {
-              console.log("Update file system is completed",response.success);
+              console.log("Update file system is completed", response.success);
             }
           });
           props.setEntry(data);
@@ -342,17 +343,18 @@ function CustomizedMenus(props) {
           //   }
           // });
           selectedDocument([]);
+          newAlert.success("File uploaded successfully");
         } else {
           console.log(response.data.notsecure);
-          alert("Please Try Again");
+          newAlert.error("Please Try Again");
           setDisableUploadButton(false);
           selectedDocument([]);
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         console.log("Server is up for maintenance");
-        alert("Server is up for maintenance. Please Try After Some Time");
+        newAlert.error("Server is up for maintenance. Please Try After Some Time");
         setDisableUploadButton(false);
 
         let s1 = formData.get("filedata");
@@ -401,7 +403,7 @@ function CustomizedMenus(props) {
       headers: {
         "Content-type": "multipart/form-data",
         Authtoken: at,
-        verificationToken: enc
+        verificationToken: enc,
       },
       data: formData,
       onUploadProgress: function (progressEvent) {
@@ -467,13 +469,12 @@ function CustomizedMenus(props) {
 
           var dic = {};
           var folder = {};
-          if(props.currentpath.length > 1){
-            var currentpath = props.currentpath + '/' + newEntry.name
-          }
-          else{
+          if (props.currentpath.length > 1) {
+            var currentpath = props.currentpath + "/" + newEntry.name;
+          } else {
             var currentpath = props.currentpath + newEntry.name;
           }
-         
+
           var currentid = id;
           console.log(currentpath);
           let k = 0;
@@ -563,7 +564,7 @@ function CustomizedMenus(props) {
             headers: {
               "Content-type": "application/json",
               authtoken: localStorage.getItem("authtoken"),
-              verificationToken: enc
+              verificationToken: enc,
             },
             data: {
               IMEI: localStorage.getItem("IMEI"),
@@ -593,7 +594,7 @@ function CustomizedMenus(props) {
             headers: {
               "Content-type": "application/json",
               authtoken: localStorage.getItem("authtoken"),
-              verificationToken: enc
+              verificationToken: enc,
             },
             data: JSON.stringify({
               IMEI: localStorage.getItem("IMEI"),
@@ -606,7 +607,7 @@ function CustomizedMenus(props) {
           }).then((response) => {
             if ("code" in response.data && response.data.code === 200) {
               console.log("Success======>>", response.data.success);
-              console.log("upload response...", response.data)
+              console.log("upload response...", response.data);
               // localStorage.setItem("filled_per", response.data.storageFilled)
               // localStorage.setItem("remaining_per", response.data.storageRemain)
             } else {
@@ -617,14 +618,14 @@ function CustomizedMenus(props) {
         } else {
           console.log(response.data.notsecure);
           setDisableUploadButton(false);
-          alert("Please Try Again");
+          newAlert.error("Please Try Again");
           selectedfiles([]);
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         console.log("Server is up for maintenance");
-        alert("Server is up for maintenance. Please Try After Some Time");
+        newAlert.error("Server is up for maintenance. Please Try After Some Time");
         setDisableUploadButton(false);
         let s1 = formData.get("filedata");
         let s2 = s1.webkitRelativePath.split("/")[0] + "/" + s1.name;
@@ -634,7 +635,7 @@ function CustomizedMenus(props) {
         selectedfiles([]);
       });
   };
-  
+
   useEffect(() => {
     if (document.length > 0) {
       onFileUpload();
@@ -663,23 +664,45 @@ function CustomizedMenus(props) {
           }}
         >
           {props.btnSize === "short" ? "" : <span>Create New&nbsp;</span>}
-          <KeyboardArrowDownRoundedIcon style={{ color: "#00b3ff", fontSize: "30px" }} />
+          <KeyboardArrowDownRoundedIcon
+            style={{ color: "#00b3ff", fontSize: "30px" }}
+          />
         </Button>
-        
       ) : (
         <div className="button-container">
           <Button
             aria-controls="customized-menu"
             aria-haspopup="true"
-            
-            
             onClick={handleClick}
-            style={{ height: "60px", borderRadius: "60px", outline: "none",
-           display:"flex", alignItems: "center", jusifyContent: "space-between", width:"200px", background: `${darkTheme ? "#0d0d0d" : "#fff"}` }}
+            style={{
+              height: "60px",
+              borderRadius: "60px",
+              outline: "none",
+              display: "flex",
+              alignItems: "center",
+              jusifyContent: "space-between",
+              width: "200px",
+              background: `${darkTheme ? "#0d0d0d" : "#fff"}`,
+            }}
           >
-            {props.btnSize === "short" ? "" : <span style={{color:`${darkTheme ? "#fff" : "#333"}`, fontSize:"16px", marginRight:"1rem"}} >Upload</span>}
-          {darkTheme ? <img src={uploadDarkIcon} alt="upload" /> : <img src={uploadIcon} alt="upload" />}
-            
+            {props.btnSize === "short" ? (
+              ""
+            ) : (
+              <span
+                style={{
+                  color: `${darkTheme ? "#fff" : "#333"}`,
+                  fontSize: "16px",
+                  marginRight: "1rem",
+                }}
+              >
+                Upload
+              </span>
+            )}
+            {darkTheme ? (
+              <img src={uploadDarkIcon} alt="upload" />
+            ) : (
+              <img src={uploadIcon} alt="upload" />
+            )}
           </Button>
         </div>
       )}
@@ -693,20 +716,25 @@ function CustomizedMenus(props) {
           handleClose();
         }}
       >
-        <StyledMenuItem style={{ width: "min-content", margin: "0%", cusor:"pointer" }}>
+        <StyledMenuItem
+          style={{ width: "min-content", margin: "0%", cusor: "pointer" }}
+        >
           <label
             htmlFor="filePicker"
             style={{
               display: "flex",
               flexDirection: "row",
               marginBottom: "0",
-              backgorund:"green"
+              backgorund: "green",
             }}
           >
             <ListItemIcon>
-              <InsertDriveFileIcon  style = {{cusor:"pointer"}} />
+              <InsertDriveFileIcon style={{ cusor: "pointer" }} />
             </ListItemIcon>
-            <ListItemText primary="Upload File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" style = {{cusor:"pointer"}} />
+            <ListItemText
+              primary="Upload File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+              style={{ cusor: "pointer" }}
+            />
           </label>
           <input
             id="filePicker"
@@ -786,5 +814,4 @@ async function myCustomFileGetter(event) {
   return files;
 }
 
-
-export default CustomizedMenus
+export default CustomizedMenus;

@@ -13,7 +13,7 @@
   padding-bottom: 1%;
   cursor: default;
   overflow: visible;
-  
+
   transition: all 300ms ease-in-out;
 }
 .rightPane_user {
@@ -128,11 +128,15 @@
   border-radius: 10px;
 }
 
-.storage_detail_header{
+.storage_detail_header {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.storage_detail_header h4 {
+  margin: 0;
 }
 
 .storage_detail_header h4 {
@@ -142,9 +146,7 @@
 .storage_detail_header h3 {
   font-size: 1rem;
   color: #acacac;
-  
 }
-
 
 .storage_detail_heading {
   text-align: left;
@@ -163,7 +165,6 @@
   left: 1%;
 }
 .storage_detail_desc {
-
   z-index: 2;
   font-size: 14px;
   text-align: center;
@@ -187,23 +188,21 @@
   margin: 0;
   padding: 1.2rem 1rem;
   transition: all 0.3s ease;
-
 }
 
-.storage_btn_section{
+.storage_btn_section {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.storage_btn_section p{
-  font-size: .9rem;
+.storage_btn_section p {
+  font-size: 0.9rem;
   text-align: left;
   color: #acacac;
   margin: 0;
   margin-left: 1rem;
 }
-
 
 .storage_button:hover {
   background-color: #fff;
@@ -232,7 +231,7 @@
   scrollbar-width: none;
 }
 
-.modal_inner{
+.modal_inner {
   width: 90%;
   height: 80%;
   padding: 2rem;
@@ -241,14 +240,11 @@
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  
 }
 
-.modal_inner::-webkit-scrollbar{
+.modal_inner::-webkit-scrollbar {
   display: none;
 }
-
-
 
 .upgrade_modal::-webkit-scrollbar {
   display: none;
@@ -257,7 +253,6 @@
 .div_upgrade_heading {
   height: min-content;
   cursor: default;
-  
 }
 .upgradeStorageHeading {
   font-family: "Poppins";
@@ -276,6 +271,12 @@
   justify-content: space-between;
 }
 
+.upgrade_plans_div2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .upgrade_plans_div::-webkit-scrollbar {
   display: none;
 }
@@ -284,7 +285,7 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  background: #fff;
+  background: rgb(233, 233, 233);
   box-shadow: 0px 10px 60px rgb(226 236 249 / 50%);
   border-radius: 30px;
 }
@@ -293,11 +294,12 @@
   box-shadow: 0 1px 10px rgb(5 227 149 / 30%);
 } */
 .upgrade_plan_top {
-  height: 15%;
+  width: 100%;
+  text-align: center;
 }
 
 .upgrade_plan_top h2 {
-  text-align: left;
+  text-align: center;
   font-family: "Poppins";
   font-style: normal;
   font-weight: 600;
@@ -309,21 +311,16 @@
 }
 
 .upgrade_plan_top h3 {
+  text-align: center;
   font-family: "Poppins";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 21px;
-  letter-spacing: -0.01em;
   color: #999999;
-  text-align: left;
-  margin: 1%;
 }
 
 .upgrade_plan_mid {
- 
   display: flex;
- 
 
   /* background-color: linear-gradient(180deg, #00ffd0 100%, rgba(255, 255, 255, 0) 100%); */
 }
@@ -350,7 +347,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #ADF1E5 10%, #ffffff00 50%);
+  background: linear-gradient(180deg, #adf1e5 10%, #ffffff00 50%);
   border-radius: 500px;
 }
 
@@ -363,7 +360,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #E127FF 10%, #ffffff00 50%);
+  background: linear-gradient(180deg, #e127ff 10%, #ffffff00 50%);
   border-radius: 500px;
 }
 
@@ -376,7 +373,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #00FF38 25%, #00A3FF 100%);
+  background: linear-gradient(180deg, #00ff38 25%, #00a3ff 100%);
   border-radius: 500px;
 }
 
@@ -506,162 +503,164 @@
 }
 
 .upgrade_plan_cta button {
-background: #000;
-border: none;
-outline: none;
-box-sizing: border-box;
-color: rgb(255, 255, 255);
-font-size: 0.8rem;
-font-weight: normal;
-font-family: "Poppins";
-border-radius: 10px;
-cursor: pointer;
-text-transform: none;
+  background: #000;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  font-size: 0.8rem;
+  font-weight: normal;
+  font-family: "Poppins";
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: none;
 
-padding: 1.2rem 1rem;
-transition: all 0.3s ease;
+  padding: 1.2rem 1rem;
+  transition: all 0.3s ease;
 }
 .upgrade_plan_cta p {
-font-family: "Poppins";
-margin: 3px;
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 21px;
-letter-spacing: -0.01em;
-text-align: center;
-color: #999999;
+  font-family: "Poppins";
+  margin: 3px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: #999999;
 }
 
 /* new */
 
-
-.file_details_section{
+.file_details_section {
   margin-top: 3rem;
 }
 
-.file_detail{
+.file_detail {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.file_detail_name{
+.file_detail_name {
   display: flex;
   align-items: center;
 }
 
-
-.file_details{
+.file_details {
   text-align: left;
   margin-left: 1rem;
 }
 
 .file_details_section h4,
-.file_details_section p{
+.file_details_section p {
   margin: 0;
 }
 
-.file_details_section h4{
+.file_details_section h4 {
   font-size: 16px;
   transition: all 300ms ease-in-out;
 }
 
-.file_details_section.dark h4{
+.file_details_section.dark h4 {
   color: #fff;
 }
 
-
-
-.file_details p{
+.file_details p {
   font-size: 14px;
   color: #acacac;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   height: auto;
   font-weight: bold;
   transition: all 300ms ease-in-out;
-
 }
 
-.file_detail_size{
+.file_detail_size {
   height: auto;
   color: #000;
   transition: all 300ms ease-in-out;
 }
 
-.file_detail_size{
+.file_detail_size {
   height: auto;
   color: #acacac;
 }
 
-.file_icon{
-  padding: .8rem;
+.file_icon {
+  padding: 0.8rem;
   background: #fafafa;
-  border: 1px solid #FAFAFA;
+  border: 1px solid #fafafa;
   box-sizing: border-box;
-  box-shadow: 0px 100px 80px rgba(41, 72, 152, 0.05), 0px 64.8148px 46.8519px rgba(41, 72, 152, 0.037963), 0px 38.5185px 25.4815px rgba(41, 72, 152, 0.0303704), 0px 20px 13px rgba(41, 72, 152, 0.025), 0px 8.14815px 6.51852px rgba(41, 72, 152, 0.0196296), 0px 1.85185px 3.14815px rgba(41, 72, 152, 0.012037);
+  box-shadow: 0px 100px 80px rgba(41, 72, 152, 0.05),
+    0px 64.8148px 46.8519px rgba(41, 72, 152, 0.037963),
+    0px 38.5185px 25.4815px rgba(41, 72, 152, 0.0303704),
+    0px 20px 13px rgba(41, 72, 152, 0.025),
+    0px 8.14815px 6.51852px rgba(41, 72, 152, 0.0196296),
+    0px 1.85185px 3.14815px rgba(41, 72, 152, 0.012037);
   border-radius: 10px;
   transition: all 300ms ease-in-out;
 }
 
-.file_icon.dark{
+.file_icon.dark {
   background: #121212;
   border: 1px solid #121212;
   box-sizing: border-box;
-  box-shadow: 0px 100px 80px rgba(41, 72, 152, 0.05), 0px 64.8148px 46.8519px rgba(41, 72, 152, 0.037963), 0px 38.5185px 25.4815px rgba(41, 72, 152, 0.0303704), 0px 20px 13px rgba(41, 72, 152, 0.025), 0px 8.14815px 6.51852px rgba(41, 72, 152, 0.0196296), 0px 1.85185px 3.14815px rgba(41, 72, 152, 0.012037);
+  box-shadow: 0px 100px 80px rgba(41, 72, 152, 0.05),
+    0px 64.8148px 46.8519px rgba(41, 72, 152, 0.037963),
+    0px 38.5185px 25.4815px rgba(41, 72, 152, 0.0303704),
+    0px 20px 13px rgba(41, 72, 152, 0.025),
+    0px 8.14815px 6.51852px rgba(41, 72, 152, 0.0196296),
+    0px 1.85185px 3.14815px rgba(41, 72, 152, 0.012037);
 }
 
-
-.second_circle, .first_circle{
+.second_circle,
+.first_circle {
   transform: translate3d(5rem, 5rem, 0);
-  
-  
 }
 
-.chart_svg{
-  
+.chart_svg {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.storage_chart{
-
+.storage_chart {
   position: relative;
 }
 
-.storage_chart_details{
+.storage_chart_details {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate3d(-70%, -50%, 0);
-  
 }
 
 .storage_chart_details h2,
-.storage_chart_details p{
+.storage_chart_details p {
   margin: 0;
-
 }
 
-.storage_detail{
+.storage_detail {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
 
+.upgrade_plan_price {
+  text-align: center;
 }
 
 /* Media */
-@media(max-width:1000px){
-  .rightPane{
+@media (max-width: 1000px) {
+  .rightPane {
     display: none;
   }
 }
 
-@media(max-width:1200px){
-  .upgrade_plans_div{
+@media (max-width: 1200px) {
+  .upgrade_plans_div {
     flex-direction: column;
   }
 
@@ -671,9 +670,7 @@ color: #999999;
   }
 }
 
-@media(max-width:768px){
-  
-
+@media (max-width: 768px) {
   .upgrade_plan_div {
     width: 75%;
     margin: 2rem 0;

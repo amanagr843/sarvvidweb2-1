@@ -142,6 +142,9 @@ const ViewFiles = (props) => {
         component={Card} 
         />
       </div>
+        <div className="footer_msg" style={{marginTop:"2rem", color:"#acacac"}} >
+          <p>Made for Web3. Made with ❤️  from Bharat(India)</p>
+        </div>
     </div>
   );
 };

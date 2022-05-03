@@ -52,7 +52,7 @@
 .forms {
   display: flex;
   width: 595px;
-  height: 487px;
+  height: 600px;
   margin-bottom: 50px;
   padding: 1rem 3rem;
   background: white;
@@ -178,37 +178,46 @@
 }
 
 .login input {
-  background-color: #f4feff;
-  border: none;
+  background-color: #d8d8d8;
+
   padding: 6px 15px;
   margin: 8px 0;
   width: 100%;
-  border-radius: 25px;
+  border-radius: 5px;
   font-family: "Poppins", sans-serif;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #cdcdcd;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.login input:focus {
+  outline: none;
 }
 
 .login p {
-  width: 100px;
-  height: 1px;
   font-family: "Poppins", sans-serif;
   font-style: normal;
   font-weight: 300;
   font-size: 14px;
-  margin-top: 10px;
+  margin: 0px;
+  margin-top: 5px;
   text-align: left;
-
-  /* sarvvidblack */
-
   color: #000000;
 }
 
 .forgotpassheader {
   display: flex;
-    justify-content: center;
-    align-items: center !important;
-    text-align: center !important;
-    margin-top: 10px !important;
-    width: 100% !important;
+  justify-content: center;
+  align-items: center !important;
+  text-align: center !important;
+  margin-top: 10px !important;
+  width: 100% !important;
 }
 
 .login li {
@@ -262,7 +271,7 @@
   cursor: pointer;
 }
 
- .login button:active {
+.login button:active {
   transform: scale(0.95);
 }
 
@@ -300,6 +309,10 @@
   background: #fff;
   padding: 2rem;
   border-radius: 1rem;
+}
+
+.country-select {
+  margin-top: 7px;
 }
 
 @media (max-width: 600px) {
