@@ -121,6 +121,7 @@ const RightPane = (props) => {
     { value: "1TB", label: "1TB" },
     { value: "2TB", label: "2TB" },
     { value: "5TB", label: "5TB" },
+    { value: "customPlan", label: "Custom plan" },
   ];
 
   const {
@@ -734,7 +735,7 @@ const RightPane = (props) => {
                   className="upgrade_plan_top"
                   style={{ marginBottom: "1rem" }}
                 >
-                  <h2>SarvvidProfessional</h2>
+                  <h2>SarvvidBusiness</h2>
                 </div>
 
                 <Select
@@ -743,6 +744,14 @@ const RightPane = (props) => {
                   onChange={(value) => setCurrentCustomPlan(value)}
                   placeholder="Choose plan"
                 />
+                {currentCustomPlan.value == "customPlan" && (
+                  <textarea
+                    name="message"
+                    id="message"
+                    cols="30"
+                    rows="10"
+                  ></textarea>
+                )}
                 <div
                   className="upgrade_plan_price"
                   style={{ marginTop: "1rem" }}
@@ -775,11 +784,13 @@ const RightPane = (props) => {
                       onClick={(e) =>
                         displayRazorpay(
                           e,
-                          `sarvvidProfessional${currentCustomPlan.value}`
+                          `sarvvidBusiness${currentCustomPlan.value}`
                         )
                       }
                     >
-                      Buy now
+                      {currentCustomPlan.value == "customPlan"
+                        ? "Submit"
+                        : "Buy now"}
                     </button>
                   )}
                   <p style={{ fontSize: "12px" }}>*monthly plan</p>
