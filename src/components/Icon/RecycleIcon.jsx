@@ -1,4 +1,10 @@
-import React, { Component, createRef, useEffect, useRef, useState } from "react";
+import React, {
+  Component,
+  createRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { withRouter } from "react-router-dom";
 import { FILE, FOLDER } from "../../utils/constants";
 
@@ -6,7 +12,7 @@ import FileIcon from "../../assets/img/file.svg";
 // import FolderIcon from "../../assets/img/folder.png";
 import FolderIcon from "../../assets/img/folder-icon.svg";
 import FolderIconBig from "../../assets/img/folder-big.svg";
-import FileIconBig from "../../assets/img/file-big.svg"
+import FileIconBig from "../../assets/img/file-big.svg";
 import axios from "axios";
 import { Container, Logo, Img, Name } from "./styles";
 import Menu from "../Menu";
@@ -20,15 +26,14 @@ import Box from "@material-ui/core/Box";
 
 // New
 import md5 from "md5";
-import { setStorage, getStorage } from "../../utils/storageHandler"
-import {useTheme} from "../../contexts/themeContext"
-import "./styles.css"
+import { setStorage, getStorage } from "../../utils/storageHandler";
+import { useTheme } from "../../contexts/themeContext";
+import "./styles.css";
 import getEnc from "../../utils/enc";
 import { deleteEntry } from "../../actions/fileSystem";
 
 // class Icon extends Component {
 //   nodeRef = createRef();
-  
 
 //   state = {
 //     visible: false,
@@ -179,7 +184,7 @@ import { deleteEntry } from "../../actions/fileSystem";
 //       //   data: {
 //       //     IMEI: localStorage.getItem("IMEI"),
 //       //     filename:this.props.entry.name,
-          
+
 //       //   },
 //       // }).then((response) => {
 //       //   console.log("deletefile response....", response)
@@ -196,19 +201,17 @@ import { deleteEntry } from "../../actions/fileSystem";
 //       const obj = {
 //         IMEI: localStorage.getItem("IMEI"),
 //         filestructure: this.props.entry,
-       
+
 //       }
 
 //       console.log("delete file obj...", obj)
-      
 
 //       const deleteResp = await axios({
 //         method: 'post',
 //         url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${this.props.entry.name}&filesize=${this.props.entry.size}`,
 //         headers: {Accept: "application/json, text/plain, */*",
-//                   authtoken: localStorage.getItem("authtoken")}, 
+//                   authtoken: localStorage.getItem("authtoken")},
 //         data: JSON.stringify(obj)
-        
 
 //       });
 
@@ -216,7 +219,6 @@ import { deleteEntry } from "../../actions/fileSystem";
 
 //       localStorage.setItem("filled_per", deleteResp.data.storageFilled)
 //       localStorage.setItem("remaining_per", deleteResp.data.storageRemain)
-
 
 //       const resp =  await axios({
 //             method: "post",
@@ -237,16 +239,9 @@ import { deleteEntry } from "../../actions/fileSystem";
 
 //       console.log("updatefilesystem response....", resp)
 
-      
-
-
-      
-      
-
 //     } catch (error) {
 //       console.log("Delete file...",error)
 //     }
-
 
 //   };
 
@@ -260,8 +255,6 @@ import { deleteEntry } from "../../actions/fileSystem";
 //     let ext = entry.name.split(".").filter((el) => el);
 
 //     ext = ext.length >= 2 ? ext[ext.length - 1] : "";
-
-
 
 //     return (
 //       <Container ref={this.nodeRef} onClick={() => this.enterFolder()} style = {{background: `${this.darkTheme ? "#121212" : "#fff"}` }} >
@@ -347,40 +340,38 @@ import { deleteEntry } from "../../actions/fileSystem";
 // }
 
 const RecycleIcon = (props) => {
+  console.log("recycle entry...", props.entry);
 
-  console.log("recycle entry...", props.entry)
-  
-  const nodeRef = useRef()
-  const darkTheme = useTheme()
-  const enc = getEnc()
+  const nodeRef = useRef();
+  const darkTheme = useTheme();
+  const enc = getEnc();
 
   const [visible, setVisible] = useState(false);
-  const [showInfo, setShowInfo] = useState(false)
-  const [style, setStyle] = useState({right:0, left:0})
-  const [loading, setLoading] = useState(false)
-  const [prevStyle, setPrevStyle] = useState({})
-  
-  console.log("Entry in Icon...", props.entry)
+  const [showInfo, setShowInfo] = useState(false);
+  const [style, setStyle] = useState({ right: 0, left: 0 });
+  const [loading, setLoading] = useState(false);
+  const [prevStyle, setPrevStyle] = useState({});
+
+  // console.log("Entry in Icon...", props.entry)
 
   const _handleContextMenu = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const path = e.composedPath();
 
     const wasOutside = !path.includes(nodeRef.current) || false;
 
     if (wasOutside) {
+      setVisible(false);
 
-      setVisible(false)
-      
-      setStyle({right:0, left:0})
-      setPrevStyle({right:0, left:0})
+      setStyle({ right: 0, left: 0 });
+      setPrevStyle({ right: 0, left: 0 });
 
       return;
     }
 
     const clickX = e.clientX;
-    const clickY = e.clientY
+    const clickY = e.clientY;
 
     const right = clickX;
     const left = !right;
@@ -414,24 +405,24 @@ const RecycleIcon = (props) => {
       left: style.left,
     };
 
-    setStyle(style)
-    setVisible(true)
-    setPrevStyle(prevStyle)
-
-  }
-
-  const _handleMouseLeave = (e) => {
-    
-    const wasOutside = !(e.target.contains(nodeRef.current));
-
-    if (wasOutside === visible){
-      setVisible(false)
-      setStyle({right:0, left:0})
-    }
-      
-
+    setStyle(style);
+    setVisible(true);
+    setPrevStyle(prevStyle);
   };
 
+  const _handleMouseLeave = (e) => {
+    const wasOutside = !e.target.contains(nodeRef.current);
+
+    if (!visible) {
+      setVisible(false);
+      return;
+    }
+
+    if (wasOutside === visible) {
+      setVisible(false);
+      setStyle({ right: 0, left: 0 });
+    }
+  };
 
   const deleteEntry = (data, entryID) => {
     const entry = data[entryID];
@@ -445,16 +436,16 @@ const RecycleIcon = (props) => {
     if (index !== -1) data[parentID].children.splice(index, 1);
     delete data[entryID];
     localStorage.setItem("recycleBin", JSON.stringify(data));
-    
-    return {...data}
+
+    return { ...data };
   };
 
   const handleDelete = async () => {
-    console.log("fileEntry...", props.entry)
+    console.log("fileEntry...", props.entry);
 
     try {
-      console.log("hi.....", props.entry)
-    //   props.deleteFn();
+      console.log("hi.....", props.entry);
+      //   props.deleteFn();
 
       // await axios({
       //   method: "post",
@@ -466,7 +457,7 @@ const RecycleIcon = (props) => {
       //   data: {
       //     IMEI: localStorage.getItem("IMEI"),
       //     filename:this.props.entry.name,
-          
+
       //   },
       // }).then((response) => {
       //   console.log("deletefile response....", response)
@@ -480,162 +471,148 @@ const RecycleIcon = (props) => {
       //   }
       // });
 
-      const entryID = md5(entry.path + entry.type)
-      const newData = deleteEntry(JSON.parse(localStorage.getItem("recycleBin")), entryID)
-
-
-
+      const entryID = md5(entry.path + entry.type);
+      const newData = deleteEntry(
+        JSON.parse(localStorage.getItem("recycleBin")),
+        entryID
+      );
 
       const obj = {
         IMEI: localStorage.getItem("IMEI"),
         filestructure: props.entry,
-        
-      }
+      };
 
-      console.log("delete file obj...", JSON.stringify(obj))
-      
+      console.log("delete file obj...", JSON.stringify(obj));
 
       const deleteResp = await axios({
-        method: 'post',
+        method: "post",
         url: `https://api.sarvvid-ai.com/deletepermanently`,
         headers: {
-                  authtoken: localStorage.getItem("authtoken"),
-                  verificationToken: enc
-
-                }, 
+          authtoken: localStorage.getItem("authtoken"),
+          verificationToken: enc,
+        },
         data: {
           IMEI: localStorage.getItem("IMEI"),
           fileSystem: localStorage.getItem("fileSystem"),
           recycleBin: localStorage.getItem("recycleBin"),
           fileEntry: props.entry,
-        }
-
+        },
       });
 
-      
+      console.log("deleteResp...", deleteResp);
 
-      console.log("deleteResp...", deleteResp)
-
-      setStorage(deleteResp.data.used_bytes, deleteResp.data.current_storage)
+      setStorage(deleteResp.data.used_bytes, deleteResp.data.current_storage);
 
       props.setRecycleEntry(JSON.parse(localStorage.getItem("recycleBin")));
 
       // window.location.reload()
-
-      
-
     } catch (error) {
-      console.log("Delete file...",error)
+      console.log("Delete file...", error);
     }
-
-
   };
 
   const restoreFile = async () => {
+    try {
+      const data = JSON.parse(localStorage.getItem("fileSystem"));
 
-    try{
-    const data = JSON.parse(localStorage.getItem("fileSystem"));
+      if (!data.hasOwnProperty("4df0f3ed7a5afc9e597b755953488a54")) {
+        data["1382b6993e9f270cb1c29833be3f5750"].children.push(
+          md5("/Restored" + "__folder__")
+        );
+        var restored = {};
+        restored.name = "Restored";
+        restored.type = "__folder__";
+        restored.creatorName = "";
+        restored.size = 0;
+        restored.path = "/Restored";
+        restored.parentPath = "/";
+        restored.children = [];
+        restored.date = "";
+        restored.parentID = md5("/" + "__folder__");
+        const restoreID = md5("/Restored" + "__folder__");
+        data[restoreID] = restored;
+      }
 
-    if(!data.hasOwnProperty("4df0f3ed7a5afc9e597b755953488a54")){
-      data["1382b6993e9f270cb1c29833be3f5750"].children.push(md5("/Restored" + "__folder__"));
-      var restored = {};
-      restored.name = "Restored";
-      restored.type = "__folder__";
-      restored.creatorName = "";
-      restored.size = 0;
-      restored.path = "/Restored";
-      restored.parentPath = "/";
-      restored.children = [];
-      restored.date = "";
-      restored.parentID = md5("/" + "__folder__");
-      const restoreID = md5("/Restored" + "__folder__");
-      data[restoreID] = restored;
-    }
+      console.log("fileSystem before...", data);
 
-    console.log("fileSystem before...", data)
+      const pid = "4df0f3ed7a5afc9e597b755953488a54";
 
-    const pid = "4df0f3ed7a5afc9e597b755953488a54"
+      var newEntry = {};
+      newEntry.parentPath = "/Restored";
+      newEntry.name = props.entry.name;
+      newEntry.mimetype = props.entry.mimetype;
+      newEntry.type = FILE;
+      newEntry.path =
+        newEntry.parentPath === "/"
+          ? `${newEntry.parentPath}${newEntry.name}`
+          : `${newEntry.parentPath}/${newEntry.name}`;
+      let id = md5(newEntry.path + newEntry.type);
 
-
-
-    var newEntry = {};
-        newEntry.parentPath = "/Restored";
-        newEntry.name = props.entry.name;
-        newEntry.mimetype = props.entry.mimetype;
-        newEntry.type = FILE;
+      if (id in data) {
+        let arr = props.entry.name.split(".");
+        if (arr.length > 1)
+          newEntry.name =
+            arr.slice(0, arr.length - 1).join(".") +
+            "_" +
+            Date.now() +
+            "." +
+            arr[arr.length - 1];
+        else newEntry.name = arr[0] + "_" + Date.now();
+        console.log("Changing Name==========>>>", newEntry.name);
         newEntry.path =
           newEntry.parentPath === "/"
             ? `${newEntry.parentPath}${newEntry.name}`
             : `${newEntry.parentPath}/${newEntry.name}`;
-        let id = md5(newEntry.path + newEntry.type);
+        id = md5(newEntry.path + newEntry.type);
+      }
 
-        if (id in data) {
-          let arr = props.entry.name.split(".");
-          if (arr.length > 1)
-            newEntry.name =
-              arr.slice(0, arr.length - 1).join(".") +
-              "_" +
-              Date.now() +
-              "." +
-              arr[arr.length - 1];
-          else newEntry.name = arr[0] + "_" + Date.now();
-          console.log("Changing Name==========>>>", newEntry.name);
-          newEntry.path =
-            newEntry.parentPath === "/"
-              ? `${newEntry.parentPath}${newEntry.name}`
-              : `${newEntry.parentPath}/${newEntry.name}`;
-          id = md5(newEntry.path + newEntry.type);
-        }
+      if (newEntry.type === FOLDER) {
+        newEntry.children = [];
+      }
+      newEntry.creatorName = "User";
+      newEntry.size = props.entry.size;
+      newEntry.parentID = pid;
+      data[id] = newEntry;
+      data["4df0f3ed7a5afc9e597b755953488a54"].children.push(id);
 
-        if (newEntry.type === FOLDER) {
-          newEntry.children = [];
-        }
-        newEntry.creatorName = "User";
-        newEntry.size = props.entry.size;
-        newEntry.parentID = pid;
-        data[id] = newEntry;
-        data["4df0f3ed7a5afc9e597b755953488a54"].children.push(id);
+      console.log("filesystem data after...", data);
 
-        console.log("filesystem data after...", data)
+      localStorage.setItem("fileSystem", JSON.stringify(data));
 
-        localStorage.setItem("fileSystem", JSON.stringify(data));
+      const entryID = md5(entry.path + entry.type);
+      const newData = deleteEntry(
+        JSON.parse(localStorage.getItem("recycleBin")),
+        entryID
+      );
 
-        const entryID = md5(entry.path + entry.type)
-        const newData = deleteEntry(JSON.parse(localStorage.getItem("recycleBin")), entryID)
+      const restoreResp = await axios({
+        method: "post",
+        url: `https://api.sarvvid-ai.com/restore`,
+        headers: {
+          authtoken: localStorage.getItem("authtoken"),
+          verificationToken: enc,
+        },
+        data: {
+          IMEI: localStorage.getItem("IMEI"),
+          fileSystem: localStorage.getItem("fileSystem"),
+          recycleBin: localStorage.getItem("recycleBin"),
+          fileEntry: props.entry,
+        },
+      });
 
-        const restoreResp = await axios({
-            method: 'post',
-            url: `https://api.sarvvid-ai.com/restore`,
-            headers: {
-                      authtoken: localStorage.getItem("authtoken"),
-                    verificationToken: enc
+      console.log("restore response...", restoreResp);
 
-                    }, 
-            data: {
-              IMEI: localStorage.getItem("IMEI"),
-              fileSystem: localStorage.getItem("fileSystem"),
-              recycleBin: localStorage.getItem("recycleBin"),
-              fileEntry: props.entry
-            }
-    
-          });
+      props.setRecycleEntry(JSON.parse(localStorage.getItem("recycleBin")));
+      props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
 
-          console.log("restore response...", restoreResp)
-
-          props.setRecycleEntry(JSON.parse(localStorage.getItem("recycleBin")));
-          props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
-
-        // window.location.reload();
-    } catch(error) {
-        console.log( "restore error...", error)
+      // window.location.reload();
+    } catch (error) {
+      console.log("restore error...", error);
     }
-  }
-
-
+  };
 
   const enterFolder = () => {
-    if (props.entry.type === FOLDER)
-      props.history.push(props.entry.path);
+    if (props.entry.type === FOLDER) props.history.push(props.entry.path);
   };
 
   const { entry } = props;
@@ -644,85 +621,93 @@ const RecycleIcon = (props) => {
   ext = ext.length >= 2 ? ext[ext.length - 1] : "";
 
   useEffect(() => {
-    document.addEventListener("contextmenu", _handleContextMenu)
+    document.addEventListener("contextmenu", _handleContextMenu);
     document.addEventListener("click", _handleMouseLeave);
 
     return () => {
       document.addEventListener("click", _handleMouseLeave);
-      document.addEventListener("contextmenu", _handleContextMenu)
-    }
-  },[])
+      document.addEventListener("contextmenu", _handleContextMenu);
+    };
+  }, []);
 
   const getExt = (fileName) => {
-    return fileName.split('.').pop();
-  }
+    return fileName.split(".").pop();
+  };
 
   const getSize = (fileSize) => {
-    if(fileSize < 1000000) return `${(fileSize/1000).toFixed(2)} kb`
-    else if(fileSize < 1000000000) return  `${(fileSize/1000000).toFixed(2)} mb`
-    else return `${(fileSize/1000000000).toFixed(2)} gb`
-  }
+    if (fileSize < 1000000) return `${(fileSize / 1000).toFixed(2)} kb`;
+    else if (fileSize < 1000000000)
+      return `${(fileSize / 1000000).toFixed(2)} mb`;
+    else return `${(fileSize / 1000000000).toFixed(2)} gb`;
+  };
 
-  return (
-    props.entry.name != "root" ? 
-    <Container ref={nodeRef} onClick={() => enterFolder()}  className = {`card-container ${darkTheme ? "dark-theme" : ""}`}  >
-    <div className="file-card">
-      <div className="file-name">
-        <Logo onClick={() => enterFolder()}>
-        <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
-        {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}
-        </Logo>
-        <Name className="name" >{entry.name}</Name>
+  return props.entry.name != "root" ? (
+    <Container
+      ref={nodeRef}
+      onClick={() => enterFolder()}
+      className={`card-container ${darkTheme ? "dark-theme" : ""}`}
+    >
+      <div className="file-card">
+        <div className="file-name">
+          <Logo onClick={() => enterFolder()}>
+            <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
+            {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}
+          </Logo>
+          <Name className="name">{entry.name}</Name>
+        </div>
+        <div className="file-size">
+          <p>{props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
+        </div>
+        <div className="file-type">
+          <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
+        </div>
       </div>
-      <div className="file-size">
-        <p>{props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
-      </div>
-      <div className="file-type">
-        <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
-      </div>
-    </div>
-    {visible ? (
-      <Menu
-        style={style}
-        content={[
-          {
-            info: "Restore",
-            onClick: () => {restoreFile()}
-          },
-          
-          {
-            info: "Delete",
-            style: { color: "red" },
-            onClick: () => {
-              handleDelete();
+      {visible ? (
+        <Menu
+          style={style}
+          content={[
+            {
+              info: "Restore",
+              onClick: () => {
+                restoreFile();
+              },
             },
-          },
-        ]}
-      />
-    ) : ""}
-    {showInfo ? (
-      <FileInfo
-        title="File Info"
-        style={prevStyle}
-        closeFn={() =>
-          setShowInfo(false)
-        }
-        entry={{
-          type: entry.type,
-          name: entry.name,
-          path: "/",
-          ext: ext,
-          size: entry.size,
-          date: entry.date,
-          creatorName: entry.creatorName,
-        }}
-      />
-    ) : (
-      ""
-    )}
-    {loading ? <LoadingContainer /> : ""}
-  </Container> : "" 
-  )
-}
+
+            {
+              info: "Delete",
+              style: { color: "red" },
+              onClick: () => {
+                handleDelete();
+              },
+            },
+          ]}
+        />
+      ) : (
+        ""
+      )}
+      {showInfo ? (
+        <FileInfo
+          title="File Info"
+          style={prevStyle}
+          closeFn={() => setShowInfo(false)}
+          entry={{
+            type: entry.type,
+            name: entry.name,
+            path: "/",
+            ext: ext,
+            size: entry.size,
+            date: entry.date,
+            creatorName: entry.creatorName,
+          }}
+        />
+      ) : (
+        ""
+      )}
+      {loading ? <LoadingContainer /> : ""}
+    </Container>
+  ) : (
+    ""
+  );
+};
 
 export default withRouter(RecycleIcon);

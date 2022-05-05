@@ -65,18 +65,14 @@ const RecycleBinViewFiles = () => {
         ) : (
           <div className="recycle_files">
             <div className="midPane-header">
-              <div className="navigation-container">
+              <div className="navigation-container" style={{ width: "100%" }}>
                 <div className="navigation-subcontainer">
                   <h2 style={{ marginRight: "auto" }}>Recycle Bin</h2>
-                  <div style={{ display: "flex" }} className="button_depth">
+                  <div className="layout-toggle">
                     {darkTheme ? (
                       <img src={gridDarkIcon} alt="grid" />
                     ) : (
-                      <img
-                        style={{ opacity: "0.5" }}
-                        src={gridIcon}
-                        alt="grid"
-                      />
+                      <img src={gridIcon} alt="grid" />
                     )}
                   </div>
                 </div>
@@ -96,9 +92,13 @@ const RecycleBinViewFiles = () => {
         <div
           className="footer_msg"
           style={{ marginTop: "2rem", color: "#acacac" }}
-        >
-          {/* <p>Made for Web3. Made with love from bharat</p> */}
-        </div>
+        ></div>
+      </div>
+      <div
+        className="footer_msg"
+        style={{ marginTop: "2rem", color: "#acacac" }}
+      >
+        <p>Made for Web3. Made with ❤️ from Bharat(India)</p>
       </div>
     </div>
   );

@@ -1,4 +1,11 @@
-import React, { Component, createRef, Fragment, useEffect, useRef, useState } from "react";
+import React, {
+  Component,
+  createRef,
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -10,18 +17,23 @@ import SearchResults from "./SearchResults";
 import Filter from "./Filter";
 import { Container, Line, Input, Search } from "./styles";
 import TextField from "@material-ui/core/TextField";
-import "./styles.css"
-
+import "./styles.css";
 
 // New
-import searchIcon from '../../assets/img/search.svg';
-import searchDarkIcon from "../../assets/img/searchdark.svg"
-import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import sarvvidLogoDark from "../../assets/img/sarvvidLogodark.svg"
-import sunImg from "../../assets/img/sun.svg"
-import moonImg from "../../assets/img/moon.svg"
-import MenuIcon from "@material-ui/icons/MenuRounded"
-import { useMenuToggle, useMenuUpdateToggle, useTheme, useThemeUpdate } from "../../contexts/themeContext"
+import searchIcon from "../../assets/img/search.svg";
+import searchDarkIcon from "../../assets/img/searchdark.svg";
+import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
+import sarvvidDark from "../../assets/img/sarvvidLogodark.svg";
+import sarvvid from "../../assets/img/sarvvidLogo.svg";
+import sunImg from "../../assets/img/sun.svg";
+import moonImg from "../../assets/img/moon.svg";
+import MenuIcon from "@material-ui/icons/MenuRounded";
+import {
+  useMenuToggle,
+  useMenuUpdateToggle,
+  useTheme,
+  useThemeUpdate,
+} from "../../contexts/themeContext";
 
 // import { makeStyles } from "@material-ui/core/styles";
 // const useStyles = makeStyles((theme) => ({
@@ -81,7 +93,7 @@ import { useMenuToggle, useMenuUpdateToggle, useTheme, useThemeUpdate } from "..
 //               this.setState({ term: event.target.value.toLowerCase() })
 //             }
 //           />
-          
+
 //           {/* <CloseRoundedIcon className = {`close_button ${this.state.term.length ? "active_close" : "" }`} onClick = {() => {searchOpen = false} } /> */}
 //         </form>
 //         {this.state.term.length > 0  ? (
@@ -111,63 +123,115 @@ import { useMenuToggle, useMenuUpdateToggle, useTheme, useThemeUpdate } from "..
 // }
 
 const SearchBar = (props) => {
-  const _ref = useRef()
-  const [term, setTerm] = useState("")
-  const [width, setWidth] = useState(0)
-  const [mode, setMode] = useState(LOCAL)
-  const [data, setData] = useState(null)
+  const _ref = useRef();
+  const [term, setTerm] = useState("");
+  const [width, setWidth] = useState(0);
+  const [mode, setMode] = useState(LOCAL);
+  const [data, setData] = useState(null);
 
-  const toggleBtn = useMenuToggle()
-  const toggleMenu = useMenuUpdateToggle()
-  const darkTheme = useTheme()
-  const toggleTheme = useThemeUpdate()
-
+  const toggleBtn = useMenuToggle();
+  const toggleMenu = useMenuUpdateToggle();
+  const darkTheme = useTheme();
+  const toggleTheme = useThemeUpdate();
 
   useEffect(() => {
-    const  { width } =  getComputedStyle(_ref.current)
-    setWidth(width)
-  })
+    const { width } = getComputedStyle(_ref.current);
+    setWidth(width);
+  });
 
   const handleMode = (mode) => {
-    setMode(mode)
-  }
+    setMode(mode);
+  };
 
-  return(
-    <div className={`middlePane_searchBar ${darkTheme ? "dark-theme" : ""}`} ref = {_ref} >
+  return (
+    <div
+      className={`middlePane_searchBar ${darkTheme ? "dark-theme" : ""}`}
+      ref={_ref}
+    >
       <div className="mobile_header">
-        <div className={`menu-btn ${toggleBtn ? "" : "opened"}`}  onClick = {() => toggleMenu()} >
-          <MenuIcon style = {{fontSize:"2rem", color:`${darkTheme? "#fafafa" : "#000"}`}}  />
+        <div
+          className={`menu-btn ${toggleBtn ? "" : "opened"}`}
+          onClick={() => toggleMenu()}
+        >
+          <MenuIcon
+            style={{
+              fontSize: "2rem",
+              color: `${darkTheme ? "#fafafa" : "#000"}`,
+            }}
+          />
         </div>
         <div className="min_logo">
-          <img src={sarvvidLogoDark} alt="logo"/>
+          {darkTheme ? (
+            <img
+              className="sarvvid_logo"
+              src={sarvvidDark}
+              alt="Sarvvid AI"
+            ></img>
+          ) : (
+            <img className="sarvvid_logo" src={sarvvid} alt="Sarvvid AI"></img>
+          )}
         </div>
-        <div className={`min-theme-toggle ${darkTheme ? "dark" : ""}`} onClick={() => toggleTheme()} >
+        <div
+          className={`min-theme-toggle ${darkTheme ? "dark" : ""}`}
+          onClick={() => toggleTheme()}
+        >
           <div className="min_theme_toggle">
             <img src={moonImg} alt="mooon" />
             <img src={sunImg} alt="sun" />
           </div>
         </div>
       </div>
-      <form  className="search_bar" noValidate autoComplete="off" style={{height: "100%"}} >
+      <form
+        className="search_bar"
+        noValidate
+        autoComplete="off"
+        style={{ height: "100%" }}
+      >
         <div className="search-section">
-          {darkTheme ? <img src={searchDarkIcon} alt="search" /> : <img src={searchIcon} alt="search" />}
-          <input  type="search" label = "Search" placeholder="Search" id="outlined-search" className={`searchBar_text ${toggleBtn ? "" : "opened"} ${darkTheme ? "dark" : ""}`} onChange={(e) => {setTerm(e.target.value.toLowerCase())}} />
+          {darkTheme ? (
+            <img src={searchDarkIcon} alt="search" />
+          ) : (
+            <img src={searchIcon} alt="search" />
+          )}
+          <input
+            type="search"
+            label="Search"
+            placeholder="Search"
+            id="outlined-search"
+            className={`searchBar_text ${toggleBtn ? "" : "opened"} ${
+              darkTheme ? "dark" : ""
+            }`}
+            onChange={(e) => {
+              setTerm(e.target.value.toLowerCase());
+            }}
+          />
         </div>
       </form>
       {term.length > 0 ? (
-        <Container style={{width: "60%"}} >
-          <Filter mode = {mode} handleMode = {handleMode} />
-          <Line/>
-          <SearchResults term = {term} isDraggable = {false} data = {
-            mode === LOCAL ? props.entry : Object.keys(props.fileSystem).map(
-              (id) => props.fileSystem[id]
-            )
-          }  closeResult = {() => {setTerm("")}} />
+        <Container style={{ width: "60%" }}>
+          <Filter mode={mode} handleMode={handleMode} />
+          <Line />
+          <SearchResults
+            term={term}
+            isDraggable={false}
+            data={
+              mode === LOCAL
+                ? props.entry
+                : Object.keys(props.fileSystem).map(
+                    (id) => props.fileSystem[id]
+                  )
+            }
+            closeResult={() => {
+              setTerm("");
+            }}
+          />
         </Container>
-      ) : ( " " ) }
+      ) : (
+        " "
+      )}
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state, ownProps) => {
   const path = ownProps.location.pathname;

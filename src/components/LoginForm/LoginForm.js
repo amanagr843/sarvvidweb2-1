@@ -52,13 +52,17 @@ function LoginForm(props) {
   const [err, showerr] = useState(false);
   const [aerr, showautherr] = useState(false);
   const [dis, setdis] = useState(false);
-  const [countryValue, setCountryValue] = useState("");
+  const [countryValue, setCountryValue] = useState({
+    value: "IN",
+    label: "India",
+  });
   const [countryCode, setCountryCode] = useState("");
 
   const countryOptions = useMemo(() => countryList().getData(), []);
 
   const countryChangeHandler = (value) => {
     setCountryValue(value);
+    console.log("country value...", value);
     console.log(
       countriesInfo.getCountryInfoByCode(value.value).countryCallingCodes[0]
     );
@@ -241,7 +245,7 @@ function LoginForm(props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [userCPass, setUserCPass] = useState("");
   const [validPhone, setValidPhone] = useState(false);
-  const [validPass, setValidPass] = useState(false)
+  const [validPass, setValidPass] = useState(false);
 
   // Functions
 
@@ -258,16 +262,14 @@ function LoginForm(props) {
   };
 
   const validatePass = (value) => {
-
     const passRegx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
     if (value.match(passRegx)) {
-      setValidPass(true)
+      setValidPass(true);
     } else {
-      setValidPass(false)
+      setValidPass(false);
     }
-     
-  }
+  };
 
   // clear credentials
 
@@ -751,25 +753,33 @@ function LoginForm(props) {
                     value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                   />
-                  <p>Phone no.</p>
-                  <input
-                    type="number"
-                    value={userPh}
-                    onChange={(e) => validatePhone(e.target.value)}
-                    style={{
-                      borderColor: `${
-                        userPh ? (validPhone ? "green" : "red") : "#FFF"
-                      }`,
-                    }}
-                  />
-                  <p>Choose country.</p>
-                  <Select
-                    options={countryOptions}
-                    value={countryValue}
-                    onChange={countryChangeHandler}
-                    placeholder="Country"
-                    className="country-select"
-                  />
+                  <div className="number-sec">
+                    <div>
+                      <p>Country</p>
+                      <Select
+                        options={countryOptions}
+                        value={countryValue}
+                        onChange={countryChangeHandler}
+                        placeholder="Country"
+                        className="country-select"
+                      />
+                    </div>
+                    <div>
+                      <p style={{ marginLeft: "1rem" }}>Phone no.</p>
+                      <input
+                        type="number"
+                        value={userPh}
+                        onChange={(e) => validatePhone(e.target.value)}
+                        style={{
+                          borderColor: `${
+                            userPh ? (validPhone ? "green" : "red") : "#FFF"
+                          }`,
+                          marginLeft: "1rem",
+                        }}
+                      />
+                    </div>
+                  </div>
+
                   <p>Password</p>
                   <input
                     type="password"

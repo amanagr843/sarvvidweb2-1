@@ -1,4 +1,10 @@
-import React, { Component, createRef, useEffect, useRef, useState } from "react";
+import React, {
+  Component,
+  createRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { withRouter } from "react-router-dom";
 import { FILE, FOLDER } from "../../utils/constants";
 
@@ -6,7 +12,7 @@ import FileIcon from "../../assets/img/file.svg";
 // import FolderIcon from "../../assets/img/folder.png";
 import FolderIcon from "../../assets/img/folder-icon.svg";
 import FolderIconBig from "../../assets/img/folder-big.svg";
-import FileIconBig from "../../assets/img/file-big.svg"
+import FileIconBig from "../../assets/img/file-big.svg";
 import axios from "axios";
 import { Container, Logo, Img, Name } from "./styles";
 import Menu from "../Menu";
@@ -21,14 +27,14 @@ import Box from "@material-ui/core/Box";
 // New
 import md5 from "md5";
 import Lottie from "react-lottie";
-import deleteLottieData from "../../assets/Lotties/delete.json"
+import deleteLottieData from "../../assets/Lotties/delete.json";
 import getEnc from "../../utils/enc";
-import {useTheme} from "../../contexts/themeContext"
-import "./styles.css"
+import { useTheme, useMenuToggle } from "../../contexts/themeContext";
+
+import "./styles.css";
 
 // class Icon extends Component {
 //   nodeRef = createRef();
-  
 
 //   state = {
 //     visible: false,
@@ -179,7 +185,7 @@ import "./styles.css"
 //       //   data: {
 //       //     IMEI: localStorage.getItem("IMEI"),
 //       //     filename:this.props.entry.name,
-          
+
 //       //   },
 //       // }).then((response) => {
 //       //   console.log("deletefile response....", response)
@@ -196,19 +202,17 @@ import "./styles.css"
 //       const obj = {
 //         IMEI: localStorage.getItem("IMEI"),
 //         filestructure: this.props.entry,
-       
+
 //       }
 
 //       console.log("delete file obj...", obj)
-      
 
 //       const deleteResp = await axios({
 //         method: 'post',
 //         url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${this.props.entry.name}&filesize=${this.props.entry.size}`,
 //         headers: {Accept: "application/json, text/plain, */*",
-//                   authtoken: localStorage.getItem("authtoken")}, 
+//                   authtoken: localStorage.getItem("authtoken")},
 //         data: JSON.stringify(obj)
-        
 
 //       });
 
@@ -216,7 +220,6 @@ import "./styles.css"
 
 //       localStorage.setItem("filled_per", deleteResp.data.storageFilled)
 //       localStorage.setItem("remaining_per", deleteResp.data.storageRemain)
-
 
 //       const resp =  await axios({
 //             method: "post",
@@ -237,16 +240,9 @@ import "./styles.css"
 
 //       console.log("updatefilesystem response....", resp)
 
-      
-
-
-      
-      
-
 //     } catch (error) {
 //       console.log("Delete file...",error)
 //     }
-
 
 //   };
 
@@ -260,8 +256,6 @@ import "./styles.css"
 //     let ext = entry.name.split(".").filter((el) => el);
 
 //     ext = ext.length >= 2 ? ext[ext.length - 1] : "";
-
-
 
 //     return (
 //       <Container ref={this.nodeRef} onClick={() => this.enterFolder()} style = {{background: `${this.darkTheme ? "#121212" : "#fff"}` }} >
@@ -347,47 +341,46 @@ import "./styles.css"
 // }
 
 const Icon = (props) => {
-  
-  const nodeRef = useRef()
-  const darkTheme = useTheme()
-  const enc = getEnc()
+  const nodeRef = useRef();
+  const darkTheme = useTheme();
+  const toggleMenuValue = useMenuToggle();
+  const enc = getEnc();
 
   const [visible, setVisible] = useState(false);
-  const [showInfo, setShowInfo] = useState(false)
-  const [style, setStyle] = useState({right:0, left:0})
-  const [loading, setLoading] = useState(false)
-  const [prevStyle, setPrevStyle] = useState({})
+  const [showInfo, setShowInfo] = useState(false);
+  const [style, setStyle] = useState({ right: 0, left: 0 });
+  const [loading, setLoading] = useState(false);
+  const [prevStyle, setPrevStyle] = useState({});
 
   const defaultLottieOptions = {
     loop: true,
     autoplay: true,
     animationData: deleteLottieData,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice"
-    }
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
-  
-  console.log("Entry in Icon...", props.entry)
+
+  // console.log("Entry in Icon...", props.entry);
 
   const _handleContextMenu = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const path = e.composedPath();
 
     const wasOutside = !path.includes(nodeRef.current) || false;
 
     if (wasOutside) {
+      setVisible(false);
 
-      setVisible(false)
-      
-      setStyle({right:0, left:0})
-      setPrevStyle({right:0, left:0})
+      setStyle({ right: 0, left: 0 });
+      setPrevStyle({ right: 0, left: 0 });
 
       return;
     }
 
     const clickX = e.clientX;
-    const clickY = e.clientY
+    const clickY = e.clientY;
 
     const right = clickX;
     const left = !right;
@@ -409,11 +402,11 @@ const Icon = (props) => {
     }
 
     if (top) {
-      style.top = `${clickY}`;
+      style.top = `${clickY + 54}`;
     }
 
     if (bottom) {
-      style.top = `${clickY}`;
+      style.top = `${clickY + 54}`;
     }
 
     const prevStyle = {
@@ -421,134 +414,115 @@ const Icon = (props) => {
       left: style.left,
     };
 
-    setStyle(style)
-    setVisible(true)
-    setPrevStyle(prevStyle)
-
-  }
-
-  const _handleMouseLeave = (e) => {
-    
-    const wasOutside = !(e.target.contains(nodeRef.current));
-
-    if (wasOutside === visible){
-      setVisible(false)
-      setStyle({right:0, left:0})
-    }
-      
-
+    setStyle(style);
+    setVisible(true);
+    setPrevStyle(prevStyle);
   };
 
+  const _handleMouseLeave = (e) => {
+    const wasOutside = !e.target.contains(nodeRef.current);
+
+    if (!visible) {
+      setVisible(false);
+      return;
+    }
+
+    if (wasOutside === visible) {
+      setVisible(false);
+      setStyle({ right: 0, left: 0 });
+    }
+  };
 
   const handleDelete = async () => {
-    console.log("fileEntry...", props.entry)
+    console.log("fileEntry...", props.entry);
 
     try {
-      console.log("hi.....", props.entry)
+      console.log("hi.....", props.entry);
       props.deleteFn();
-
-      
 
       const data = JSON.parse(localStorage.getItem("recycleBin"));
 
-      console.log("recycleData before...", data)
+      console.log("recycleData before...", data);
 
-      const pid = "1382b6993e9f270cb1c29833be3f5750"
-
-
+      const pid = "1382b6993e9f270cb1c29833be3f5750";
 
       var newEntry = {};
-          newEntry.parentPath = "/";
-          newEntry.name = props.entry.name;
+      newEntry.parentPath = "/";
+      newEntry.name = props.entry.name;
 
-          newEntry.type = FILE;
-          newEntry.mimetype = props.entry.mimetype;
-          newEntry.path =
-            newEntry.parentPath === "/"
-              ? `${newEntry.parentPath}${newEntry.name}`
-              : `${newEntry.parentPath}/${newEntry.name}`;
-          let id = md5(newEntry.path + newEntry.type);
+      newEntry.type = FILE;
+      newEntry.mimetype = props.entry.mimetype;
+      newEntry.path =
+        newEntry.parentPath === "/"
+          ? `${newEntry.parentPath}${newEntry.name}`
+          : `${newEntry.parentPath}/${newEntry.name}`;
+      let id = md5(newEntry.path + newEntry.type);
 
-          if (id in data) {
-            let arr = props.entry.name.split(".");
-            if (arr.length > 1)
-              newEntry.name =
-                arr.slice(0, arr.length - 1).join(".") +
-                "_" +
-                Date.now() +
-                "." +
-                arr[arr.length - 1];
-            else newEntry.name = arr[0] + "_" + Date.now();
-            console.log("Changing Name==========>>>", newEntry.name);
-            newEntry.path =
-              newEntry.parentPath === "/"
-                ? `${newEntry.parentPath}${newEntry.name}`
-                : `${newEntry.parentPath}/${newEntry.name}`;
-            id = md5(newEntry.path + newEntry.type);
-          }
+      if (id in data) {
+        let arr = props.entry.name.split(".");
+        if (arr.length > 1)
+          newEntry.name =
+            arr.slice(0, arr.length - 1).join(".") +
+            "_" +
+            Date.now() +
+            "." +
+            arr[arr.length - 1];
+        else newEntry.name = arr[0] + "_" + Date.now();
+        console.log("Changing Name==========>>>", newEntry.name);
+        newEntry.path =
+          newEntry.parentPath === "/"
+            ? `${newEntry.parentPath}${newEntry.name}`
+            : `${newEntry.parentPath}/${newEntry.name}`;
+        id = md5(newEntry.path + newEntry.type);
+      }
 
-          if (newEntry.type === FOLDER) {
-            newEntry.children = [];
-          }
-          newEntry.creatorName = "User";
-          newEntry.size = props.entry.size;
-          newEntry.parentID = pid;
-          data[id] = newEntry;
-          data["1382b6993e9f270cb1c29833be3f5750"].children.push(id);
+      if (newEntry.type === FOLDER) {
+        newEntry.children = [];
+      }
+      newEntry.creatorName = "User";
+      newEntry.size = props.entry.size;
+      newEntry.parentID = pid;
+      data[id] = newEntry;
+      data["1382b6993e9f270cb1c29833be3f5750"].children.push(id);
 
-          console.log("recycle data after...", data)
+      console.log("recycle data after...", data);
 
-          localStorage.setItem("recycleBin", JSON.stringify(data));
-
+      localStorage.setItem("recycleBin", JSON.stringify(data));
 
       const obj = {
         IMEI: localStorage.getItem("IMEI"),
         filestructure: props.entry,
-        
-      }
+      };
 
-      console.log("delete file obj...", JSON.stringify(obj))
-      
+      console.log("delete file obj...", JSON.stringify(obj));
 
       const deleteResp = await axios({
-        method: 'post',
-        url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem("IMEI")}&filename=${props.entry.name}&filesize=${props.entry.size}`,
+        method: "post",
+        url: `https://api.sarvvid-ai.com/deletefile?IMEI=${localStorage.getItem(
+          "IMEI"
+        )}&filename=${props.entry.name}&filesize=${props.entry.size}`,
         headers: {
-                  authtoken: localStorage.getItem("authtoken"),
-                  verificationToken: enc
-                }, 
+          authtoken: localStorage.getItem("authtoken"),
+          verificationToken: enc,
+        },
         data: {
           IMEI: localStorage.getItem("IMEI"),
           fileSystem: localStorage.getItem("fileSystem"),
           recycleBin: localStorage.getItem("recycleBin"),
-          fileEntry: props.entry
-        }
-
+          fileEntry: props.entry,
+        },
       });
 
-      
-
-      console.log("deleteResp...", deleteResp)
-
-      
+      console.log("deleteResp...", deleteResp);
 
       props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
-
-
-      
-
     } catch (error) {
-      console.log("Delete file...",error)
+      console.log("Delete file...", error);
     }
-
-
   };
 
-
-
   const enterFolder = () => {
-    if (props.entry.type === FOLDER)
-      props.history.push(props.entry.path);
+    if (props.entry.type === FOLDER) props.history.push(props.entry.path);
   };
 
   const { entry } = props;
@@ -557,28 +531,35 @@ const Icon = (props) => {
   ext = ext.length >= 2 ? ext[ext.length - 1] : "";
 
   useEffect(() => {
-    document.addEventListener("contextmenu", _handleContextMenu)
+    document.addEventListener("contextmenu", _handleContextMenu);
     document.addEventListener("click", _handleMouseLeave);
 
     return () => {
       document.addEventListener("click", _handleMouseLeave);
-      document.addEventListener("contextmenu", _handleContextMenu)
-    }
-  },[])
+      document.addEventListener("contextmenu", _handleContextMenu);
+    };
+  }, []);
 
   const getExt = (fileName) => {
-    return fileName.split('.').pop();
-  }
+    return fileName.split(".").pop();
+  };
 
   const getSize = (fileSize) => {
-    if(fileSize < 1000000) return `${(fileSize/1000).toFixed(2)} kb`
-    else if(fileSize < 1000000000) return  `${(fileSize/1000000).toFixed(2)} mb`
-    else return `${(fileSize/1000000000).toFixed(2)} gb`
-  }
+    if (fileSize < 1000000) return `${(fileSize / 1000).toFixed(2)} kb`;
+    else if (fileSize < 1000000000)
+      return `${(fileSize / 1000000).toFixed(2)} mb`;
+    else return `${(fileSize / 1000000000).toFixed(2)} gb`;
+  };
 
-  return (
-    props.entry.name === "Restored" && props.entry.children.length === 0 ? "" : 
-    <Container ref={nodeRef} onClick={() => enterFolder()}  className = {`card-container ${darkTheme ? "dark-theme" : ""}`}  >
+  return props.entry.name === "Restored" &&
+    props.entry.children.length === 0 ? (
+    ""
+  ) : (
+    <Container
+      ref={nodeRef}
+      onClick={() => enterFolder()}
+      className={`card-container ${darkTheme ? "dark-theme" : ""}`}
+    >
       {/* <div className="lottie">
       <Lottie 
         options={defaultLottieOptions}
@@ -586,92 +567,90 @@ const Icon = (props) => {
           width={40}
         />
       </div> */}
-    <div className="file-card">
-      <div className="file-name">
-      
-        <Logo onClick={() => enterFolder()}>
-        <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
-        {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}
-        </Logo>
-        <Name className="name" >{entry.name}</Name>
+      <div className="file-card">
+        <div className="file-name">
+          <Logo onClick={() => enterFolder()}>
+            <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
+            {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}
+          </Logo>
+          <Name className="name">{entry.name}</Name>
+        </div>
+        <div className="file-size">
+          <p>{props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
+        </div>
+        <div className="file-type">
+          <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
+        </div>
       </div>
-      <div className="file-size">
-        <p>{ props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
-      </div>
-      <div className="file-type">
-        <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
-      </div>
-    </div>
-    {visible ? (
-      <Menu
-        style={style}
-        content={[
-          {
-            info: "Download",
-            onClick: () => {
-              setLoading(true);
-              axios
-                .request({
-                  method: "get",
-                  url: `https://api.sarvvid-ai.com/cat?filehash=${
-                    entry.name
-                  }&IMEI=${localStorage.getItem(
-                    "IMEI"
-                  )}&ping=${localStorage.getItem("ping")}`,
-                  headers: {
-                    Accept: "application/json, text/plain, */*",
-                    Authtoken: localStorage.getItem("authtoken"),
-                    "Content-Type": "application/json",
-                    verificationToken: enc
+      {visible ? (
+        <Menu
+          style={style}
+          content={[
+            {
+              info: "Download",
+              onClick: () => {
+                setLoading(true);
+                axios
+                  .request({
+                    method: "get",
+                    url: `https://api.sarvvid-ai.com/cat?filehash=${
+                      entry.name
+                    }&IMEI=${localStorage.getItem(
+                      "IMEI"
+                    )}&ping=${localStorage.getItem("ping")}`,
+                    headers: {
+                      Accept: "application/json, text/plain, */*",
+                      Authtoken: localStorage.getItem("authtoken"),
+                      "Content-Type": "application/json",
+                      verificationToken: enc,
+                    },
+                    responseType: "blob",
+                  })
+                  .then((response) => {
+                    setLoading(false);
+                    fileDownload(response.data, entry.name);
 
-                  },
-                  responseType: "blob",
-                })
-                .then((response) => {
-                  setLoading(false);
-                  fileDownload(response.data, entry.name);
-
-                  console.log( "Download resp...", response);
-                });
+                    console.log("Download resp...", response);
+                  });
+              },
             },
-          },
-          {
-            info: "Share",
-            onClick: () => setShowInfo(true)              
-          },
-          {
-            info: "Delete",
-            style: { color: "red" },
-            onClick: () => {
-              handleDelete();
+            {
+              info: "Share",
+              onClick: () => setShowInfo(true),
             },
-          },
-        ]}
-      />
-    ) : ""}
-    {showInfo ? (
-      <FileInfo
-        title="File Info"
-        style={prevStyle}
-        closeFn={() =>
-          setShowInfo(false)
-        }
-        entry={{
-          type: entry.type,
-          name: entry.name,
-          path: "/",
-          ext: ext,
-          size: entry.size,
-          date: entry.date,
-          creatorName: entry.creatorName,
-        }}
-      />
-    ) : (
-      ""
-    )}
-    {loading ? <LoadingContainer /> : ""}
-  </Container>
-  )
-}
+            {
+              info: "Delete",
+              style: { color: "red" },
+              onClick: () => {
+                handleDelete();
+              },
+            },
+          ]}
+        />
+      ) : (
+        ""
+      )}
+      {showInfo ? (
+        <FileInfo
+          title="File Info"
+          style={prevStyle}
+          closeFn={() => setShowInfo(false)}
+          entry={{
+            type: entry.type,
+            name: entry.name,
+            path: "/",
+            ext: ext,
+            size: entry.size,
+            date: entry.date,
+            creatorName: entry.creatorName,
+          }}
+        />
+      ) : (
+        ""
+      )}
+      {loading ? <LoadingContainer /> : ""}
+    </Container>
+  );
+};
 
 export default withRouter(Icon);
