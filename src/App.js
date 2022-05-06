@@ -29,7 +29,14 @@ import GridContainer from "./components/Grid/GridContainer.js";
 // import './assets/styles/App.scss';
 import styles from "./assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import reducers from "./reducers";
-import { ViewFiles,RecycleBinViewFiles, SharedViewFiles, SettingsViewFiles, RequestViewFiles,  Shared } from "./pages";
+import {
+  ViewFiles,
+  RecycleBinViewFiles,
+  SharedViewFiles,
+  SettingsViewFiles,
+  RequestViewFiles,
+  Shared,
+} from "./pages";
 
 import RightPane from "./components/RightPane/RightPane";
 import generatedummyFileSystem from "./utils/dummyFileSystem";
@@ -37,12 +44,10 @@ import Axios from "axios";
 import CheckOnline from "./components/CheckOnline/CheckOnline";
 import { useDispatch } from "react-redux";
 import { updateAllDataInfo } from "./actions/allData";
-import {ThemeProvider, useTheme} from "./contexts/themeContext"
+import { ThemeProvider, useTheme } from "./contexts/themeContext";
 
 const useStyles = makeStyles(styles);
 const rootEl = document.getElementById("root");
-
-
 
 const store = createStore(
   reducers,
@@ -57,9 +62,8 @@ const store = createStore(
       Object.keys(localStorage.getItem("recycleBin")).length > 0
         ? JSON.parse(localStorage.getItem("recycleBin"))
         : generatedummyFileSystem(),
-    
   },
-  
+
   composeWithDevTools()
 );
 
@@ -76,13 +80,12 @@ function App() {
   const [b, setb] = useState(0);
   const [online, setOnline] = useState(true);
   const [currentView, setCurrentView] = useState("home");
-  const darkTheme = useTheme()
-  
+  const darkTheme = useTheme();
+
   function handleViewChange(viewName) {
     setCurrentView(viewName);
   }
 
-  
   // const [chosenFile, setChosenFile] = useState(false);
   // const [chosenFolder, setChosenFolder] = useState(false);
   // const [chosenType, setChosenType] = useState({
@@ -103,66 +106,66 @@ function App() {
   //   //   setChosenFolder(true);
   //   // }
   // };
-  useEffect(() => {
+  // useEffect(() => {
 
-    localStorage.setItem("theme", "light")
+  //   // localStorage.setItem("theme", "light")
 
-    Axios(
-      `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem(
-        "ping"
-      )}`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
-          "Content-Type": "application/json",
-          Authtoken: localStorage.getItem("authtoken"),
-        },
-        data: JSON.stringify({
-          IMEI: localStorage.getItem("IMEI"),
-        }),
-      }
-    )
-      .then((res) => {
-        console.log( "getData resp...", res);
-        
-        seta(
-          ((res.data.current_storage * res.data.filled_per) / 100).toFixed(2)
-        );
-        setb(res.data.current_storage);
-        localStorage.setItem(
-          "used",
-          isNaN(
-            ((res.data.current_storage * res.data.filled_per) / 100).toFixed(2)
-          )
-            ? 0
-            : ((res.data.current_storage * res.data.filled_per) / 100).toFixed(
-                9
-              ) *
-                1000 *
-                1000 *
-                1000
-        );
-        localStorage.setItem(
-          "total",
-          isNaN(res.data.current_storage)
-            ? 20 * 1000 * 1000 * 1000
-            : res.data.current_storage * 1000 * 1000 * 1000
-        );
-      })
-      .catch(() => {
-        if (localStorage.getItem("used") == null)
-          localStorage.setItem("used", 0);
-        if (localStorage.getItem("total") == null)
-          localStorage.setItem("total", 20 * 1000 * 1000 * 1000);
-      });
-  }, []);
+  //   Axios(
+  //     `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem(
+  //       "ping"
+  //     )}`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
+  //         "Content-Type": "application/json",
+  //         Authtoken: localStorage.getItem("authtoken"),
+  //       },
+  //       data: JSON.stringify({
+  //         IMEI: localStorage.getItem("IMEI"),
+  //       }),
+  //     }
+  //   )
+  //     .then((res) => {
+  //       console.log( "getData resp...", res);
+
+  //       seta(
+  //         ((res.data.current_storage * res.data.filled_per) / 100).toFixed(2)
+  //       );
+  //       setb(res.data.current_storage);
+  //       localStorage.setItem(
+  //         "used",
+  //         isNaN(
+  //           ((res.data.current_storage * res.data.filled_per) / 100).toFixed(2)
+  //         )
+  //           ? 0
+  //           : ((res.data.current_storage * res.data.filled_per) / 100).toFixed(
+  //               9
+  //             ) *
+  //               1000 *
+  //               1000 *
+  //               1000
+  //       );
+  //       localStorage.setItem(
+  //         "total",
+  //         isNaN(res.data.current_storage)
+  //           ? 20 * 1000 * 1000 * 1000
+  //           : res.data.current_storage * 1000 * 1000 * 1000
+  //       );
+  //     })
+  //     .catch(() => {
+  //       if (localStorage.getItem("used") == null)
+  //         localStorage.setItem("used", 0);
+  //       if (localStorage.getItem("total") == null)
+  //         localStorage.setItem("total", 20 * 1000 * 1000 * 1000);
+  //     });
+  // }, []);
 
   // const checkOnce = setInterval(() => {
   //   if (online) {
   //     Axios.get("https://randomfox.ca/floof/")
   //       .then((response) => {
-          
+
   //       })
   //       .catch((error) => {
   //         setOnline(false);
@@ -188,29 +191,25 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeProvider>
-      <Router>
-        <HashRouter>
-          <Fragment>
-            <div className="App">
-            
-
-              <Switch>
-               
-                
-                <Route path="/login" exact={true}>
-                  {/* {online ? "" : <CheckOnline click={handleOnlineClick} />} */}
-                  <LoginForm
-                    showError={updateErrorMessage}
-                    updateTitle={updateTitle}
-                    setA={(val) => seta(val)}
-                    setB={(val) => setb(val)}
-                  />
-                </Route>
-               
-                <PrivateRoute path="/">
-                  <div className={`Dashboard ${darkTheme ? "dark" : ""}`}>
+        <Router>
+          <HashRouter>
+            <Fragment>
+              <div className="App">
+                <Switch>
+                  <Route path="/login" exact={true}>
                     {/* {online ? "" : <CheckOnline click={handleOnlineClick} />} */}
-                    <Route
+                    <LoginForm
+                      showError={updateErrorMessage}
+                      updateTitle={updateTitle}
+                      setA={(val) => seta(val)}
+                      setB={(val) => setb(val)}
+                    />
+                  </Route>
+
+                  <PrivateRoute path="/">
+                    <div className={`Dashboard ${darkTheme ? "dark" : ""}`}>
+                      {/* {online ? "" : <CheckOnline click={handleOnlineClick} />} */}
+                      <Route
                         path="*"
                         render={(props) => (
                           <Sidebar
@@ -219,33 +218,32 @@ function App() {
                           />
                         )}
                       />
-                    {currentView === "home" && <Route path="*" component={ViewFiles} />}
-                    {currentView === "recycleBin" && <RecycleBinViewFiles />}
-                    {currentView === "sharedFiles" && <SharedViewFiles />}
-                    {currentView === "fileRequest" && <RequestViewFiles />}
-                    {currentView === "settings" && <SettingsViewFiles />}
-                    
-                    
+                      {currentView === "home" && (
+                        <Route path="*" component={ViewFiles} />
+                      )}
+                      {currentView === "recycleBin" && <RecycleBinViewFiles />}
+                      {currentView === "sharedFiles" && <SharedViewFiles />}
+                      {currentView === "fileRequest" && <RequestViewFiles />}
+                      {currentView === "settings" && <SettingsViewFiles />}
 
-                    
-                    <RightPane
-                      a={a}
-                      b={b}
-                      title={title}
-                      setA={(val) => seta(val)}
-                      setB={(val) => setb(val)}
-                    />
-                  </div>
-                </PrivateRoute>
-              </Switch>
-              <AlertComponent
-                errorMessage={errorMessage}
-                hideError={updateErrorMessage}
-              />
-            </div>
-          </Fragment>
-        </HashRouter>
-      </Router>
+                      <RightPane
+                        a={a}
+                        b={b}
+                        title={title}
+                        setA={(val) => seta(val)}
+                        setB={(val) => setb(val)}
+                      />
+                    </div>
+                  </PrivateRoute>
+                </Switch>
+                <AlertComponent
+                  errorMessage={errorMessage}
+                  hideError={updateErrorMessage}
+                />
+              </div>
+            </Fragment>
+          </HashRouter>
+        </Router>
       </ThemeProvider>
     </Provider>
   );

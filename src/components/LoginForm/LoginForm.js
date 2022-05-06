@@ -56,7 +56,7 @@ function LoginForm(props) {
     value: "IN",
     label: "India",
   });
-  const [countryCode, setCountryCode] = useState("");
+  const [countryCode, setCountryCode] = useState("+91");
 
   const countryOptions = useMemo(() => countryList().getData(), []);
 
@@ -754,7 +754,7 @@ function LoginForm(props) {
                     onChange={(e) => setUserEmail(e.target.value)}
                   />
                   <div className="number-sec">
-                    <div>
+                    <div className="select-sec">
                       <p>Country</p>
                       <Select
                         options={countryOptions}
@@ -764,8 +764,8 @@ function LoginForm(props) {
                         className="country-select"
                       />
                     </div>
-                    <div>
-                      <p style={{ marginLeft: "1rem" }}>Phone no.</p>
+                    <div style={{ width: "55%" }}>
+                      <p>Phone no.</p>
                       <input
                         type="number"
                         value={userPh}
@@ -774,7 +774,6 @@ function LoginForm(props) {
                           borderColor: `${
                             userPh ? (validPhone ? "green" : "red") : "#FFF"
                           }`,
-                          marginLeft: "1rem",
                         }}
                       />
                     </div>

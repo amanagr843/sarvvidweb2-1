@@ -74,7 +74,7 @@ export const Form = {
     cursor: pointer;
     width: 100%;
     height: 40px;
-    transition: opacity 250ms ease-in;
+    transition: opacity 300ms ease-in-out;
     &.disabled {
       cursor: not-allowed;
       opacity: 0.5;

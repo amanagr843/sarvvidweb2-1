@@ -20,6 +20,7 @@ import axios from "axios";
 // New
 // import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import { useAlert } from "react-alert";
+import { PieChart } from "react-minimal-pie-chart";
 import Select from "react-select";
 import { getStorage, setStorage } from "../../utils/storageHandler";
 import Loader from "../Loader/Loader";
@@ -394,7 +395,7 @@ const RightPane = (props) => {
           </div>
           <h4>{`${totalStorage.toFixed(0)} GB`}</h4>
         </div>
-        <Chart
+        {/* <Chart
           width={"100%"}
           height={"250px"}
           chartType="PieChart"
@@ -406,8 +407,19 @@ const RightPane = (props) => {
           ]}
           options={chartOptions}
           rootProps={{ "data-testid": "1" }}
-        />
-
+        /> */}
+        <div style={{ width: "200px" }}>
+          <PieChart
+            data={[
+              { title: "Used", value: usedStorage, color: "#6a41ea" },
+              { title: "Unused", value: unusedStorage, color: "#f8228d" },
+            ]}
+            lineWidth={30}
+            rounded={true}
+            animate={true}
+            animationDuration={1000}
+          />
+        </div>
         <p
           className="storage_total"
           style={{ color: `${darkTheme ? "#ccc" : "#121212"}` }}

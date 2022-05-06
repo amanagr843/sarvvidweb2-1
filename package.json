@@ -36,6 +36,7 @@
     "react-google-charts": "^3.0.15",
     "react-helmet": "^5.2.1",
     "react-lottie": "^1.2.3",
+    "react-minimal-pie-chart": "^8.3.0",
     "react-native-virgil-crypto": "^0.6.1",
     "react-native-web": "^0.17.6",
     "react-qr-code": "^1.1.1",

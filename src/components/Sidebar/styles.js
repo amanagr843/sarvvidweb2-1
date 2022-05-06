@@ -10,7 +10,7 @@ export const SideBarContainer = styled.section`
   & .rootLink {
     text-decoration: none;
   }
-  transition: margin-left 250ms ease-in;
+  transition: margin-left 300ms ease-in-out;
   @media screen and (max-width: 1000px) {
     margin-left: ${(props) => (props.toggle ? "-320px" : "0")};
   }
@@ -55,7 +55,7 @@ export const LinkContainer = styled.div`
   cursor: pointer;
   align-content: space-around;
   color: black;
-  transition: background 250ms ease-in;
+  transition: background 300ms ease-in-out;
   & .dropdown {
     float: right;
     height: 20px;
@@ -83,7 +83,7 @@ export const DropDownIcon = styled.div`
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-bottom: 5px solid #30363e;
-  transition: transform 150ms ease-in;
+  transition: transform 150ms ease-in-out;
   &.clicked {
     transform: rotate(180deg);
   }

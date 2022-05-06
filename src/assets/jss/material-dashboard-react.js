@@ -54,7 +54,7 @@ const hexToRgb = input => {
 const drawerWidth = 260;
 
 const transition = {
-  transition: "all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
+  transition: "all 300ms ease-in-out"
 };
 
 const container = {
@@ -221,7 +221,7 @@ const defaultBoxShadow = {
     hexToRgb(blackColor) +
     ", 0.2)",
   padding: "10px 0",
-  transition: "all 150ms ease 0s"
+  transition: "all 300ms ease-in-out"
 };
 
 const title = {

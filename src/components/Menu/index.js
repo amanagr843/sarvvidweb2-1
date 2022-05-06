@@ -32,7 +32,7 @@ const Container = styled.div`
   border-radius: 8px;
   & .content {
     padding: 15px;
-    transition: background 250ms ease-in;
+    transition: background 300ms ease-in-out;
     &:hover {
       background: #eeeff1;
     }

@@ -54,7 +54,7 @@ const StyledMenuItem = withStyles((theme) => ({
   root: {
     "&:hover": {
       backgroundColor: "rgba(92, 197, 188, 0.4)",
-      transition: "all 0.5s ease",
+      transition: "all 0.3s ease-in-out",
       // "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
       //   color: theme.palette.common.white,
       // },

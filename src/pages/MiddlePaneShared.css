@@ -100,7 +100,7 @@
   display: none;
   opacity: 0;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .close_button.active_close {
@@ -222,7 +222,7 @@
   text-transform: none;
   margin: 0;
   padding: 1.2rem 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .button_depth {

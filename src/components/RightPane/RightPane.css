@@ -187,7 +187,7 @@
   text-transform: none;
   margin: 0;
   padding: 1.2rem 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .storage_btn_section {
@@ -419,7 +419,7 @@
   padding-bottom: 2%;
   border-radius: 4px;
   font-size: 120%;
-  transition-duration: 0.4s;
+  transition-duration: 0.3s;
   /* letter-spacing: 0.0107142857em; */
   letter-spacing: 0.02em;
   color: #005288;
@@ -516,7 +516,7 @@
   text-transform: none;
 
   padding: 1.2rem 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 .upgrade_plan_cta p {
   font-family: "Poppins";
