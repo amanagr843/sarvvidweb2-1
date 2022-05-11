@@ -648,6 +648,56 @@
   align-items: center;
 }
 
+.custom_modal {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom_modal_inner {
+  width: 50%;
+  background: #fff;
+  box-shadow: 0px 10px 60px rgb(226 236 249 / 50%);
+  border-radius: 15px;
+  padding: 1.5rem;
+}
+
+.custom_input {
+  margin-bottom: 1.5rem;
+}
+
+.custom_input h4 {
+  font-size: 1rem;
+}
+
+.custom_input input {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  background: #adf1e5;
+  padding: 0.3rem;
+}
+
+.custom_input input:focus {
+  outline-color: #549c8f;
+  outline-width: 1px;
+}
+
+.custom_input textarea {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  background: #adf1e5;
+  padding: 0.3rem;
+}
+
+.custom_input textarea:focus {
+  outline-color: #549c8f;
+  outline-width: 1px;
+}
+
 .upgrade_plan_price {
   text-align: center;
 }

@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 3rem;
   padding: 0 5%;
 }
 
@@ -294,6 +294,41 @@
 
 .leftContainer.dark-theme .logout-btn h3 {
   color: #fff;
+}
+
+.banner {
+  background: -webkit-linear-gradient(45deg, #085078 10%, #85d8ce 90%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+
+  animation: slide 5s infinite;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateY(-10%);
+  }
+  50% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-10%);
+  }
+}
+
+.banner p {
+  margin: 0;
+  font-size: 1.2rem;
 }
 
 @media (min-width: 1000px) {

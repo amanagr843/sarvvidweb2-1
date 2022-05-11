@@ -103,6 +103,7 @@ const useUpgradeStyles = makeStyles((theme) => ({
 // }));
 const RightPane = (props) => {
   const [openUpgrade, setOpenUpgrade] = useState(false);
+  const [openCustom, setOpenCustom] = useState(false);
   const [userAnim, setUserAnim] = useState(true);
   const [LogoutAnim, setLogoutAnim] = useState(true);
   const classesUpgrade = useUpgradeStyles();
@@ -117,6 +118,10 @@ const RightPane = (props) => {
   const [totalStorage, setTotalStorage] = useState(0);
   const [usedStorageGb, setUsedStorageGb] = useState(0);
   const [currentCustomPlan, setCurrentCustomPlan] = useState("");
+  const [customEmailSubject, setCustomEmailSubject] = useState(
+    "Hey, I want to buy a custom plan for my company."
+  );
+  const [customEmailMessage, setCustomEmailMessage] = useState("");
 
   const planOptions = [
     { value: "1TB", label: "1TB" },
@@ -360,6 +365,38 @@ const RightPane = (props) => {
     else if (fileSize < 1000000000)
       return `${(fileSize / 1000000).toFixed(2)} mb`;
     else return `${(fileSize / 1000000000).toFixed(2)} gb`;
+  };
+
+  const handlePlans = (value) => {
+    if (value.value === "customPlan") {
+      setOpenCustom(true);
+    } else {
+      setCurrentCustomPlan(value);
+    }
+  };
+
+  const sendCustomEmail = async () => {
+    const data = {
+      IMEI: localStorage.getItem("IMEI"),
+      emailSubject: customEmailSubject,
+      emailContent: customEmailMessage,
+    };
+
+    try {
+      const result = await axios.post(
+        "https://api.sarvvid-ai.com/customplan/quote",
+        data
+      );
+
+      if (result.status === 200) {
+        newAlert.success(result.data.message);
+      }
+
+      setOpenCustom(false);
+      setOpenUpgrade(false);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
   };
 
   return (
@@ -742,7 +779,7 @@ const RightPane = (props) => {
             </div>
             <hr />
             <div className="upgrade_plans_div2">
-              <div className="upgrade_plan_div">
+              <div className="upgrade_plan_div" style={{ height: "350px" }}>
                 <div
                   className="upgrade_plan_top"
                   style={{ marginBottom: "1rem" }}
@@ -753,7 +790,7 @@ const RightPane = (props) => {
                 <Select
                   options={planOptions}
                   value={currentCustomPlan}
-                  onChange={(value) => setCurrentCustomPlan(value)}
+                  onChange={(value) => handlePlans(value)}
                   placeholder="Choose plan"
                 />
                 {currentCustomPlan.value == "customPlan" && (
@@ -808,6 +845,40 @@ const RightPane = (props) => {
                   <p style={{ fontSize: "12px" }}>*monthly plan</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          open={openCustom}
+          onClose={() => {
+            setOpenCustom(!openCustom);
+          }}
+          className="custom_modal"
+        >
+          <div className="custom_modal_inner">
+            <div className="custom_input">
+              <h4> Subject </h4>
+              <input
+                type="text"
+                className="subject_input"
+                value={customEmailSubject}
+                onChange={(e) => setCustomEmailSubject(e.value)}
+              />
+            </div>
+            <div className="custom_input">
+              <h4> Message </h4>
+              <textarea
+                id=""
+                cols="30"
+                rows="10"
+                className="message_input"
+                placeholder="Please type your quote here"
+                value={customEmailMessage}
+                onChange={(e) => setCustomEmailMessage(e.value)}
+              ></textarea>
+            </div>
+            <div className="upgrade_plan_cta" onClick={() => sendCustomEmail()}>
+              <button className="upgrade_plan_button">Send</button>
             </div>
           </div>
         </Modal>
