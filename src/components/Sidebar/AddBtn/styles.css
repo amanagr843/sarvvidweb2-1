@@ -1,15 +1,57 @@
-.button-container{
-    background: linear-gradient(#31FFAD, #10ADFE);
-    width: 206px;
-    padding: 3px;
-    border-radius: 100px;
-    
-    margin: auto;
+.button-container {
+  background: linear-gradient(#31ffad, #10adfe);
+  width: 206px;
+  padding: 3px;
+  border-radius: 100px;
 
+  margin: auto;
 }
 
-.logout-section{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.logout-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hash_modal_inner {
+  width: 50%;
+  padding: 2rem;
+  border-radius: 25px;
+  background: #fff;
+}
+
+.hash_modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hash_modal_inner h1 {
+  font-size: 1.7rem;
+  text-align: center;
+}
+
+.hash_modal_inner h4 {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.file_hash {
+  opacity: 0.8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 100ms ease-in-out;
+}
+
+.file_hash p {
+  font-size: 1.3rem;
+  margin: 0;
+  margin-right: 1rem;
+}
+
+.file_hash:hover {
+  opacity: 1;
 }

@@ -29,6 +29,8 @@ import { useDispatch } from "react-redux";
 import { updateStorageInfo } from "../../../actions/storage";
 import { virgilCrypto } from "react-native-virgil-crypto";
 import { useAlert } from "react-alert";
+import { Modal } from "@material-ui/core";
+import copyIcon from "../../../assets/img/copy.svg";
 
 const StyledMenu = withStyles({
   paper: {
@@ -75,8 +77,14 @@ function CustomizedMenus(props) {
   });
   const [files, selectedfiles] = useState([]);
   const [document, selectedDocument] = useState([]);
+  const [ipfsDocument, setIpfsDocument] = useState([]);
   const [disableUploadButton, setDisableUploadButton] = useState(false);
+  const [openHashModal, setOpenHashModal] = useState(false);
+  const [fileHash, setFileHash] = useState("");
+
   const onFileChange = (event) => {
+    console.log("hiii");
+
     // Update the state
     console.log("Selected FILE>>>>>>>>>>>>>>>", event.target.files);
     console.log("target========>", event.target.files);
@@ -85,7 +93,6 @@ function CustomizedMenus(props) {
       event.target.files[0].webkitRelativePath.split("/")[0] +
       "/" +
       event.target.files[0].name;
-
     if (str in fileUploading) {
       console.log("=======TRUE=======");
       for (let key in event.target.files) {
@@ -100,7 +107,6 @@ function CustomizedMenus(props) {
         event.target.files[key].webkitRelativePath = webkit;
       }
     }
-
     selectedDocument(event.target.files);
   };
 
@@ -119,6 +125,10 @@ function CustomizedMenus(props) {
   };
 
   const [fileUploading, setFileUploading] = useState({
+    // fileName: {name:fileName, progress: 0, totalprogress: 0 },
+  });
+
+  const [ipfsFileUploading, setIpfsFileUploading] = useState({
     // fileName: {name:fileName, progress: 0, totalprogress: 0 },
   });
 
@@ -354,7 +364,9 @@ function CustomizedMenus(props) {
       .catch((err) => {
         console.log(err);
         console.log("Server is up for maintenance");
-        newAlert.error("Server is up for maintenance. Please Try After Some Time");
+        newAlert.error(
+          "Server is up for maintenance. Please Try After Some Time"
+        );
         setDisableUploadButton(false);
 
         let s1 = formData.get("filedata");
@@ -625,7 +637,9 @@ function CustomizedMenus(props) {
       .catch((err) => {
         console.log(err);
         console.log("Server is up for maintenance");
-        newAlert.error("Server is up for maintenance. Please Try After Some Time");
+        newAlert.error(
+          "Server is up for maintenance. Please Try After Some Time"
+        );
         setDisableUploadButton(false);
         let s1 = formData.get("filedata");
         let s2 = s1.webkitRelativePath.split("/")[0] + "/" + s1.name;
@@ -636,11 +650,133 @@ function CustomizedMenus(props) {
       });
   };
 
+  const onIpfsFileChange = (event) => {
+    // Update the state
+    console.log("Selected FILE for IPFS...", event.target.files);
+
+    console.log("First ipfs file", event.target.files[0].webkitRelativePath);
+    let str =
+      event.target.files[0].webkitRelativePath.split("/")[0] +
+      "/" +
+      event.target.files[0].name;
+
+    if (str in fileUploading) {
+      console.log("=======TRUE=======");
+      for (let key in event.target.files) {
+        let arr = event.target.files[key].webkitRelativePath.split("/");
+        arr[0] = arr[0] + "_" + new Date();
+        let webkit = "";
+        for (let string of arr) {
+          webkit = webkit + string + "/";
+        }
+        webkit.slice(0, -1);
+        console.log("webkit===============>>>", webkit);
+        event.target.files[key].webkitRelativePath = webkit;
+      }
+    }
+
+    setIpfsDocument(event.target.files);
+  };
+
+  const onIpfsUpload = async () => {
+    console.log("uploading file to IPFS...");
+    const formData = new FormData();
+    formData.append("IMEI", localStorage.getItem("IMEI"));
+    formData.append("name", "avatar");
+
+    console.log("upload ipfs file data...", ipfsDocument[0]);
+
+    if (ipfsDocument[0].size > storageData.rem_bytes) {
+      newAlert.error("Not enough space");
+      return;
+    } else {
+      console.log("Continue downloading");
+    }
+
+    setDisableUploadButton(true);
+    formData.append("filedata", ipfsDocument[0]);
+
+    let string;
+    string = {};
+    string[ipfsDocument[0].name] = {
+      name: ipfsDocument[0].name,
+      progress: 0,
+      totalprogress: 0,
+    };
+
+    setIpfsFileUploading({ ...fileUploading, ...string });
+
+    if (localStorage.getItem("authtoken")) {
+      console.log(localStorage.getItem("authtoken"));
+    } else {
+      localStorage.setItem("authtoken", "65aa9ad20c8a2e900c8a65aa51f66c140c8a");
+    }
+
+    const at = localStorage.getItem("authtoken");
+    console.log("auth token...", at);
+
+    // console.log("formdata for ipfs", formData);
+
+    axios({
+      method: "post",
+      url: `https://api.sarvvid-ai.com/ipfs/upload`,
+      headers: {
+        "Content-type": "multipart/form-data",
+        Authtoken: at,
+        verificationToken: enc,
+      },
+      data: formData,
+      onUploadProgress: function (progressEvent) {
+        let s1 = formData.get("filedata");
+        let s2 = s1.name;
+        let totalP = 0;
+        totalP = progressEvent.total;
+        let prog = progressEvent.loaded;
+        let obj = {};
+
+        if (progressEvent.loaded === progressEvent.total) {
+          obj = { ...fileUploading };
+          delete obj[s2];
+          setFileUploading({ ...obj });
+        } else {
+          obj[s2] = { name: s2, progress: prog, totalprogress: totalP };
+          setFileUploading({ ...fileUploading, ...obj });
+        }
+      },
+    })
+      .then((response) => {
+        console.log("ipfs upload resp...", response);
+        setFileHash(response.data.hash);
+        setOpenHashModal(true);
+        setIpfsDocument([]);
+        newAlert.success("File uploaded successfully to IPFS");
+      })
+      .catch((err) => {
+        console.log("upload ipfs error...", err);
+        newAlert.error(
+          "Server is up for maintenance. Please Try After Some Time"
+        );
+        setDisableUploadButton(false);
+
+        let s1 = formData.get("filedata");
+        let s2 = s1.webkitRelativePath.split("/")[0] + "/" + s1.name;
+        let obj = { ...fileUploading };
+        delete obj[s2];
+        setFileUploading({ ...obj });
+        setIpfsDocument([]);
+      });
+  };
+
   useEffect(() => {
     if (document.length > 0) {
       onFileUpload();
     }
   }, [document]);
+  useEffect(() => {
+    if (ipfsDocument.length > 0) {
+      onIpfsUpload();
+    }
+  }, [ipfsDocument]);
   useEffect(() => {
     if (files.length > 0) {
       onFolderUpload();
@@ -740,7 +876,9 @@ function CustomizedMenus(props) {
             id="filePicker"
             style={{ visibility: "hidden", width: "0%" }}
             type="file"
-            onChange={onFileChange}
+            onChange={(e) => {
+              onFileChange(e);
+            }}
           />
         </StyledMenuItem>
 
@@ -793,11 +931,57 @@ function CustomizedMenus(props) {
             }}
           />
         </StyledMenuItem>
+        <StyledMenuItem style={{ width: "min-content", margin: "0%" }}>
+          <label
+            htmlFor="filePickerIpfs"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginBottom: "0",
+            }}
+          >
+            <ListItemIcon>
+              <InsertDriveFileIcon style={{ cusor: "pointer" }} />
+            </ListItemIcon>
+            <ListItemText primary="Upload to IPFS" />
+          </label>
+          <input
+            id="filePickerIpfs"
+            style={{ visibility: "hidden", width: "0%" }}
+            type="file"
+            onChange={(e) => {
+              onIpfsFileChange(e);
+            }}
+          />
+        </StyledMenuItem>
       </StyledMenu>
       <CreateModal
         hover={() => props.onEnterProgress()}
         files={fileUploading}
       />
+      <Modal
+        open={openHashModal}
+        onClose={() => setOpenHashModal(false)}
+        className="hash_modal"
+      >
+        <div className="hash_modal_inner">
+          <h1>Your file has been downloaded successfully to IPFS</h1>
+          <h4>
+            Click on the hash below tp copy the hash for downloding the file in
+            future.
+          </h4>
+          <div
+            className="file_hash"
+            onClick={() => {
+              navigator.clipboard.writeText(fileHash)
+              newAlert.success("hash copied to clipboard")
+            }}
+          >
+            <p>{fileHash}</p>
+            <img src={copyIcon} alt="copy" />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
